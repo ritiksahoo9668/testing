@@ -59,7 +59,7 @@ const uiUrl = process.env.E2E_ERP_UI_BASE_URL || 'http://demo.127.0.0.1.nip.io:8
 if (!existsSync(resolve(rootDir, '.env'))) fail('Missing testing/.env');
 if (!process.env.E2E_ERP_USERNAME) fail('Set E2E_ERP_USERNAME in .env');
 
-console.log('\n--- Maithan ERP UI Testing (Thinkspace Actions) ---\n');
+console.log('\n--- Maithan ERP UI Testing (Login + Thinkspace Actions) ---\n');
 console.log(`✓ Tenant UI: ${uiUrl}`);
 await checkUrl(`${uiUrl.replace(/\/$/, '')}/login`, 'UI');
 await checkUrl(`${uiUrl.replace(/\/$/, '')}/api/v1/health/`, 'API');
@@ -67,7 +67,11 @@ await checkUrl(`${uiUrl.replace(/\/$/, '')}/api/v1/health/`, 'API');
 const playwrightArgs = [
   'playwright',
   'test',
+  'tests/auth/login',
   'tests/thinkspace/workflow',
+  '--project=chromium-login-guest',
+  '--grep-invert',
+  '@server-reject',
   '--project=erp-authenticated',
   '--project=chromium-guest',
   ...extraArgs,

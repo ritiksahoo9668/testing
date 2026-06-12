@@ -1,0 +1,10 @@
+{
+  "invalidPhoneUsernames": [
+    { "value": "9668123855", "reason": "unregistered mobile (screenshot case)" },
+    { "value": "9876543210", "reason": "unregistered 9-series mobile" },
+    { "value": "966812", "reason": "too short" },
+    { "value": "09668123855", "reason": "leading zero" },
+    { "value": "9668123855a", "reason": "alphanumeric" }
+  ],
+  "invalidPassword": "WrongPass@12345"
+}

@@ -20,9 +20,23 @@ const sharedUse = {
 /** UI-only browser projects for Thinkspace Actions workflow tests. */
 export const browserProjects: Project[] = [
   {
+    name: 'chromium-login-guest',
+    grep: /@login/,
+    grepInvert: /@authenticated/,
+    testMatch: /auth\/login\/.*\.ui\.spec\.ts/,
+    use: {
+      ...sharedUse,
+      ...devices['Desktop Chrome'],
+      // Capture evidence when field-validation assertions fail (missing inline mobile error).
+      screenshot: 'only-on-failure',
+      video: 'retain-on-failure',
+      trace: 'retain-on-failure',
+    },
+  },
+  {
     name: 'chromium-guest',
     grep: /@unauthenticated/,
-    grepInvert: /@authenticated/,
+    grepInvert: /@authenticated|@login/,
     testMatch: /thinkspace\/workflow\/.*\.ui\.spec\.ts/,
     use: {
       ...sharedUse,

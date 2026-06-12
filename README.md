@@ -1,6 +1,6 @@
-# Maithan ERP — UI Testing (Thinkspace Actions)
+# Maithan ERP — UI Testing
 
-Playwright UI automation for the **Thinkspace Actions** module (`/thinkspace/task`).  
+Playwright UI automation for **ERP Login** (`/login`) and **Thinkspace Actions** (`/thinkspace/task`).  
 Test cases are **positive** and **negative** workflow/validation scenarios only — no smoke, regression, or API-only suites.
 
 ## Quick start
@@ -12,6 +12,7 @@ npm run setup          # first time only
 
 npm run start          # start Django + UI (if not running)
 npm test               # full Thinkspace Actions workflow (UI)
+npm run test:login     # ERP login module (guest / unauthenticated)
 ```
 
 ## Folder structure
@@ -31,7 +32,22 @@ testing/
 └── docs/THINKSPACE_ACTIONS_FLOW.md
 ```
 
-## Workflow specs
+## Login specs (`tests/auth/login/`)
+
+| File | Section | Coverage |
+|------|---------|----------|
+| `01-page-load.ui.spec.ts` | A | Card, fields, Forgot Password, push hint |
+| `02-validation.ui.spec.ts` | B | Empty username/password client validation |
+| `03-successful-login.ui.spec.ts` | C | Valid sign-in, loading, session reload, trim |
+| `04-invalid-credentials.ui.spec.ts` | D | Wrong password, retry after failure |
+| `05-password-ux.ui.spec.ts` | E | Show/hide password, disabled while submitting |
+| `06-route-guard.ui.spec.ts` | F | Guest redirect, deep link after login |
+| `07-phone-username.ui.spec.ts` | H | **Mobile → password blur** must show `#login-username-error` — **fails** until UI adds validation (in default `npm test`) |
+| `07b-phone-submit-server.ui.spec.ts` | H-b | Optional: server 401 on submit (`npm run test:login:server-reject`) |
+
+Allure hierarchy: **ERP module → Login → section**.
+
+## Thinkspace workflow specs
 
 | File | Section | Coverage |
 |------|---------|----------|
