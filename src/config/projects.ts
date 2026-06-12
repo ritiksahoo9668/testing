@@ -55,12 +55,29 @@ export const browserProjects: Project[] = [
     name: 'erp-authenticated',
     dependencies: ['setup-erp-auth'],
     grep: /@thinkspace/,
-    grepInvert: /@unauthenticated/,
+    grepInvert: /@unauthenticated|@demo/,
     testMatch: /thinkspace\/workflow\/.*\.ui\.spec\.ts/,
     use: {
       ...sharedUse,
       ...devices['Desktop Chrome'],
       storageState: e2eConfig.erp.authStorageStatePath,
+    },
+  },
+  {
+    name: 'thinkspace-demo',
+    dependencies: ['setup-erp-auth'],
+    grep: /@demo/,
+    testMatch: /thinkspace\/demo\/.*\.ui\.spec\.ts/,
+    use: {
+      ...sharedUse,
+      ...devices['Desktop Chrome'],
+      storageState: e2eConfig.erp.authStorageStatePath,
+      video: 'on',
+      trace: 'on',
+      screenshot: 'on',
+      launchOptions: {
+        slowMo: e2eConfig.slowMo > 0 ? e2eConfig.slowMo : 400,
+      },
     },
   },
 ];

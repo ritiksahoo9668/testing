@@ -25,6 +25,7 @@
     "test:ui": "playwright test tests/thinkspace/workflow --project=erp-authenticated --ui",
     "test:debug": "playwright test tests/thinkspace/workflow --project=erp-authenticated --debug",
     "test:ci": "cross-env CI=true playwright test tests/thinkspace/workflow --project=erp-authenticated",
+    "demo:thinkspace-action": "node scripts/demo-thinkspace-action.mjs",
     "report": "playwright show-report",
     "report:allure": "python scripts/allure_report.py",
     "report:allure:open": "python scripts/allure_report.py --open",

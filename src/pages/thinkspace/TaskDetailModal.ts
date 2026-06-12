@@ -101,6 +101,26 @@ export class TaskDetailModal extends BasePage {
     await expect(this.postButton).toBeDisabled();
   }
 
+  async uploadAttachment(filePath: string): Promise<void> {
+    await this.selectTab('Attachments');
+    const fileInput = this.page.locator('#task-file-input');
+    await fileInput.setInputFiles(filePath);
+    const responsePromise = this.page
+      .waitForResponse(
+        (res) =>
+          res.url().includes('add-attachment-to-task') && res.request().method() === 'POST',
+        { timeout: 30_000 },
+      )
+      .catch(() => null);
+    await this.modalShell.getByRole('button', { name: 'Upload', exact: true }).click();
+    await responsePromise;
+    await waitForSpinnerToDisappear(this.page);
+  }
+
+  async expectAttachmentListed(filename: string): Promise<void> {
+    await expect(this.modalShell.getByText(filename).first()).toBeVisible({ timeout: 20_000 });
+  }
+
   async deleteTask(): Promise<void> {
     const responsePromise = this.page
       .waitForResponse(

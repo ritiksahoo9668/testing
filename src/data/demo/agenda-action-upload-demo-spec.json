@@ -1,0 +1,43 @@
+{
+  "title": "Thinkspace Agenda / Action — upload demo template (QA only)",
+  "module": "Thinkspace",
+  "subModule": "Action Master",
+  "route": "/thinkspace/task",
+  "purpose": "Demo file layout for upload testing in Agenda or Action module. Column labels match the business handwritten spec; used as an attachment or future bulk-import test file — not tied to any other ERP module.",
+  "templateFile": "agenda-action-upload-demo-template.csv",
+  "howToUseInTests": [
+    "Action: open detail modal → Attachments tab → upload this CSV",
+    "Action: quick-create modal → add file before + Create Action",
+    "Agenda: attach via agenda card upload or bulk import when UI exposes it"
+  ],
+  "automatedCase": "P-I02",
+  "columns": [
+    { "sl": 1, "header": "sl_no", "label": "Sl. no", "type": "integer" },
+    { "sl": 2, "header": "plant_code", "label": "Plant Code", "type": "string" },
+    { "sl": 3, "header": "gate_entry_datetime", "label": "Gate Entry date and time", "type": "datetime" },
+    { "sl": 4, "header": "gate_entry_pass_no", "label": "Gate Entry pass no.", "type": "string" },
+    { "sl": 5, "header": "gate_entry_item_no", "label": "Gate Entry item no.", "type": "integer" },
+    { "sl": 6, "header": "purchase_order_no", "label": "Purchase Order No.", "type": "string" },
+    { "sl": 7, "header": "po_item_no", "label": "PO Item no.", "type": "string" },
+    { "sl": 8, "header": "item_name", "label": "Item name", "type": "string" },
+    { "sl": 9, "header": "item_code", "label": "Item code", "type": "string" },
+    { "sl": 10, "header": "item_description", "label": "Item description", "type": "string" },
+    { "sl": 11, "header": "party_name", "label": "Party Name", "type": "string" },
+    { "sl": 12, "header": "transporter_name", "label": "Transporter Name", "type": "string" },
+    { "sl": 13, "header": "transporter_code", "label": "Transporter code", "type": "string" },
+    { "sl": 14, "header": "vehicle_no", "label": "Vehicle number", "type": "string" },
+    { "sl": 15, "header": "vehicle_pass_no", "label": "Vehicle pass no.", "type": "string" },
+    { "sl": 16, "header": "po_quantity", "label": "PO Quantity", "type": "decimal" },
+    { "sl": 17, "header": "challan_qty", "label": "Challan Qty.", "type": "decimal" },
+    { "sl": 18, "header": "gross_weight", "label": "Gross weight", "type": "decimal" },
+    { "sl": 19, "header": "tare_weight", "label": "Tare weight", "type": "decimal" },
+    { "sl": 20, "header": "net_weight", "label": "Net weight", "type": "decimal" },
+    { "sl": 21, "header": "lr_no", "label": "LR no.", "type": "string" },
+    { "sl": 22, "header": "challan_no", "label": "Challan no.", "type": "string" },
+    { "sl": 23, "header": "challan_date", "label": "Challan Date", "type": "date" },
+    { "sl": 24, "header": "way_bill_no", "label": "Way-bill no.", "type": "string" },
+    { "sl": 25, "header": "source", "label": "Source", "type": "string" },
+    { "sl": 26, "header": "transit_pass_no", "label": "TP. no. (Transit Pass)", "type": "string" },
+    { "sl": 27, "header": "max_weight", "label": "Max weight", "type": "decimal" }
+  ]
+}

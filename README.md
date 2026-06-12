@@ -13,6 +13,7 @@ npm run setup          # first time only
 npm run start          # start Django + UI (if not running)
 npm test               # full Thinkspace Actions workflow (UI)
 npm run test:login     # ERP login module (guest / unauthenticated)
+npm run demo:thinkspace-action   # record Action Master flow video (one .webm)
 ```
 
 ## Folder structure
@@ -21,15 +22,19 @@ npm run test:login     # ERP login module (guest / unauthenticated)
 testing/
 ├── src/
 │   ├── data/thinkspace/
-│   │   ├── actions-test-matrix.json   # Human-readable case catalog (CRUD, steps, validation)
-│   │   └── actions-test-data.json     # Runnable datasets
+│   │   ├── actions-test-matrix.json      # Case catalog (36 cases, CRUD, steps)
+│   │   ├── action-test-workflows.json    # Workflow paths for manual + automation
+│   │   ├── action-flow-demo.json         # Demo video step definitions
+│   │   └── actions-test-data.json        # Runnable datasets (TS-A01…)
 │   ├── pages/thinkspace/              # Page objects (TaskPage, modals)
 │   ├── fixtures/                      # Auth + thinkspace cleanup helpers
 │   └── utils/test-case.ts             # Report annotations from matrix
 ├── tests/
 │   ├── setup/erp-auth.setup.ts
 │   └── thinkspace/workflow/           # UI specs A–G (positive / negative)
-└── docs/THINKSPACE_ACTIONS_FLOW.md
+├── docs/THINKSPACE_ACTIONS_FLOW.md
+├── docs/THINKSPACE_ACTION_MASTER_ANALYSIS.md
+└── docs/ACTION_MODULE_TEST_WORKFLOW.md
 ```
 
 ## Login specs (`tests/auth/login/`)
@@ -47,6 +52,25 @@ testing/
 
 Allure hierarchy: **ERP module → Login → section**.
 
+## Thinkspace Action Master — flow video (demo)
+
+Records **one continuous walkthrough** of the Action module (sections A–F) as a test video:
+
+```powershell
+cd d:\maithanerp\testing
+npm run demo:thinkspace-action
+```
+
+Flow (10 steps, aligned with `src/data/thinkspace/action-flow-demo.json`):
+
+1. Open workspace (A) → 2. Work mode (A) → 3. Week/Today (G) → 4. Bucketlist (B) → 5. **Create** Specific (C) → 6. **Read** from list (D) → 7. Detail tabs (E) → 8. **Update** description + progress (E) → 9. Post note (E) → 10. **Delete** (F).
+
+See [docs/ACTION_MODULE_TEST_WORKFLOW.md](./docs/ACTION_MODULE_TEST_WORKFLOW.md) for CRUD workflows, [docs/ACTION_MODULE_UPLOAD_AND_WORKFLOWS.md](./docs/ACTION_MODULE_UPLOAD_AND_WORKFLOWS.md) for Agenda/Action upload testing, and [docs/THINKSPACE_ACTION_MASTER_ANALYSIS.md](./docs/THINKSPACE_ACTION_MASTER_ANALYSIS.md) for flow ↔ matrix mapping.
+
+**Upload demo CSV (your 25-column spec for Agenda/Action testing):** `src/data/demo/agenda-action-upload-demo-template.csv`
+
+**Output:** `test-results/<run-folder>/video.webm` (plus `trace.zip`). Browser opens headed with `slowMo=400` unless `E2E_SLOW_MO` is set in `.env`.
+
 ## Thinkspace workflow specs
 
 | File | Section | Coverage |
@@ -59,6 +83,7 @@ Allure hierarchy: **ERP module → Login → section**.
 | `06-lifecycle.ui.spec.ts` | F | Done, delete, full lifecycle |
 | `07-week-view.ui.spec.ts` | G | Week navigation |
 | `08-create-agenda.ui.spec.ts` | H | Create agenda (header, bulk, bucket, validation) |
+| `09-upload-workflows.ui.spec.ts` | I | Action attachment upload (detail modal) |
 
 Each test title follows the matrix id (e.g. `P-C01 — Create a Specific action…`).  
 Annotations in the HTML report include **Summary**, **Steps**, **CRUD**, **UI location**, and **Expected**.

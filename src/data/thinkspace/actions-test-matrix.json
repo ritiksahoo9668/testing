@@ -12,7 +12,8 @@
     "E": "E. Detail modal",
     "F": "F. Lifecycle & status",
     "G": "G. Week navigation",
-    "H": "H. Create agenda (UI)"
+    "H": "H. Create agenda (UI)",
+    "I": "I. Upload & file import"
   },
   "cases": [
     {
@@ -703,6 +704,87 @@
         "Create disabled until external fields filled"
       ],
       "expected": "Create button disabled.",
+      "automated": true
+    },
+    {
+      "id": "P-E05",
+      "section": "I",
+      "priority": "P1",
+      "type": "positive",
+      "crud": "Update",
+      "entity": "Action attachment",
+      "workflowStep": "Detail → Attachments tab → select file → Upload",
+      "uiLocation": "TaskDetailModal — Attachments tab; #task-file-input",
+      "title": "Upload a document on the action Attachments tab",
+      "what": "User attaches a file to an existing action from the detail modal Attachments tab.",
+      "steps": "1. Open action detail.\n2. Go to Attachments tab.\n3. Choose a file via browse or dropzone.\n4. Click Upload.\n5. Verify file appears in attachment list.",
+      "validationPoints": [
+        "File selected in dropzone",
+        "Upload succeeds",
+        "Attachment row visible with filename"
+      ],
+      "expected": "Attachment listed on action.",
+      "automated": true
+    },
+    {
+      "id": "P-C04",
+      "section": "I",
+      "priority": "P2",
+      "type": "positive",
+      "crud": "Create",
+      "entity": "Action attachment",
+      "workflowStep": "Quick-create → add attachment → create action",
+      "uiLocation": "Quick-create modal — #create-attachments-input",
+      "title": "Create action with attachment in quick-create",
+      "what": "User adds one or more files in the create modal before saving the action.",
+      "steps": "1. Open quick-create from bucket.\n2. Add file via create attachments input.\n3. Submit + Create Action.\n4. Open detail → Attachments tab and verify file.",
+      "validationPoints": [
+        "File listed in create modal",
+        "Action created",
+        "Attachment visible after open"
+      ],
+      "expected": "Attachment stored with new action.",
+      "automated": false
+    },
+    {
+      "id": "P-AG07",
+      "section": "I",
+      "priority": "P2",
+      "type": "positive",
+      "crud": "Create",
+      "entity": "Agenda (bulk Excel)",
+      "workflowStep": "Agendas page → Bulk import → download template → upload Excel/CSV",
+      "uiLocation": "AgendasPage — Bulk import modal (not visible in Action compact mode today)",
+      "title": "Bulk import agendas from Excel template",
+      "what": "User downloads agenda bulk template, fills rows, and imports multiple agendas via thinkspace/agendas/bulk-upload/.",
+      "steps": "1. Open agendas with bulk import button visible.\n2. Download Excel template.\n3. Upload filled file.\n4. Verify created_count in response and agendas in list.",
+      "validationPoints": [
+        "Template downloads",
+        "Import API returns success",
+        "Agendas appear in column"
+      ],
+      "expected": "Agendas created or updated by agenda_ref.",
+      "automated": false,
+      "note": "Bulk import button hidden when AgendasPage is embedded in /thinkspace/task (compactMode)"
+    },
+    {
+      "id": "P-I02",
+      "section": "I",
+      "priority": "P0",
+      "type": "positive",
+      "crud": "Update",
+      "entity": "Action attachment (demo file)",
+      "workflowStep": "Detail → Attachments → upload agenda-action-upload-demo-template.csv",
+      "uiLocation": "TaskDetailModal — Attachments tab; demo file from handwritten column spec",
+      "title": "Upload demo CSV (25 columns) on action Attachments tab",
+      "what": "QA uploads the business demo file (plant, PO, vehicle, weights, challan, etc.) as an action attachment in Thinkspace Agenda/Action testing — same file used for manual and automated upload tests.",
+      "steps": "1. Open action detail.\n2. Attachments tab.\n3. Upload src/data/demo/agenda-action-upload-demo-template.csv.\n4. Verify file name appears in attachment list.",
+      "validationPoints": [
+        "Demo CSV uploads without error",
+        "Filename visible in Attachments list",
+        "Column layout matches agenda-action-upload-demo-spec.json"
+      ],
+      "expected": "Demo upload file attached to action.",
       "automated": true
     }
   ]

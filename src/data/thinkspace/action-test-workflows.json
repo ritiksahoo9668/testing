@@ -1,0 +1,462 @@
+{
+  "module": "Thinkspace",
+  "subModule": "Action Master",
+  "uiLabel": "Actions",
+  "route": "/thinkspace/task",
+  "license": "thinkspace-task",
+  "matrixFile": "actions-test-matrix.json",
+  "testDataFile": "actions-test-data.json",
+  "workflows": [
+    {
+      "id": "WF-AUTH-01",
+      "name": "Unauthenticated access blocked",
+      "priority": "P0",
+      "persona": "Guest",
+      "goal": "Ensure Actions route requires login",
+      "preconditions": ["No session / cleared storage"],
+      "steps": [
+        { "order": 1, "action": "Navigate to /thinkspace/task", "expected": "Redirect to /login" }
+      ],
+      "matrixCases": ["N-A01"],
+      "spec": "tests/thinkspace/workflow/01-access-navigation.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-AUTH-02",
+      "name": "Licensed user enters Actions workspace",
+      "priority": "P0",
+      "persona": "ERP user with thinkspace-task",
+      "goal": "Open Action Master and see workspace controls",
+      "preconditions": ["Valid tenant credentials", "thinkspace-task license"],
+      "steps": [
+        { "order": 1, "action": "Sign in via tenant URL", "expected": "Session established" },
+        { "order": 2, "action": "Open /thinkspace/task", "expected": "Work mode + Today view visible, not /403" },
+        { "order": 3, "action": "Verify view menu shows Actions · Today", "expected": "Navigation controls ready" }
+      ],
+      "matrixCases": ["P-A01"],
+      "spec": "tests/thinkspace/workflow/01-access-navigation.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-NAV-01",
+      "name": "Calendar view switching (Today ↔ Week)",
+      "priority": "P1",
+      "persona": "Licensed user",
+      "goal": "Change list scope between today and week",
+      "preconditions": ["On /thinkspace/task"],
+      "steps": [
+        { "order": 1, "action": "Open view menu → Week", "expected": "URL contains view=week" },
+        { "order": 2, "action": "Open view menu → Actions · Today", "expected": "Week param cleared" }
+      ],
+      "matrixCases": ["P-A02"],
+      "spec": "tests/thinkspace/workflow/01-access-navigation.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-NAV-02",
+      "name": "Work mode — Agenda/Action",
+      "priority": "P1",
+      "persona": "Licensed user",
+      "goal": "Switch to Agenda/Action layout for column view",
+      "preconditions": ["On /thinkspace/task"],
+      "steps": [
+        { "order": 1, "action": "Click Agenda/Action in Work mode toggle", "expected": "Mode active; page stays on Actions" }
+      ],
+      "matrixCases": ["P-A03"],
+      "spec": "tests/thinkspace/workflow/01-access-navigation.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-NAV-03",
+      "name": "Deep link to action detail",
+      "priority": "P1",
+      "persona": "Licensed user",
+      "goal": "Open action directly via URL /thinkspace/task/:id",
+      "preconditions": ["Action exists (API or prior create)"],
+      "steps": [
+        { "order": 1, "action": "Navigate to /thinkspace/task/{id}", "expected": "Detail modal opens with correct title" }
+      ],
+      "matrixCases": ["P-A04"],
+      "testData": ["TS-A02"],
+      "spec": "tests/thinkspace/workflow/01-access-navigation.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-BUCKET-01",
+      "name": "Capture idea in bucketlist",
+      "priority": "P1",
+      "persona": "Licensed user",
+      "goal": "Store unstructured idea before formal action",
+      "preconditions": ["On /thinkspace/task", "Bucketlist open"],
+      "steps": [
+        { "order": 1, "action": "Open bucketlist FAB if closed", "expected": "Panel visible" },
+        { "order": 2, "action": "Type title → Enter", "expected": "Row appears; optional toast 'Added to bucketlist.'" },
+        { "order": 3, "action": "API: POST bucket-list/", "expected": "201 with bucket item id" }
+      ],
+      "matrixCases": ["P-B01", "P-B02"],
+      "testData": ["TS-A03"],
+      "spec": "tests/thinkspace/workflow/02-bucketlist.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-BUCKET-02",
+      "name": "Convert bucket idea → Specific action (primary create path)",
+      "priority": "P0",
+      "persona": "Licensed user",
+      "goal": "Create a Specific action from bucket quick-create",
+      "preconditions": ["Bucket item exists"],
+      "steps": [
+        { "order": 1, "action": "Bucket row → click Specific", "expected": "Quick-create modal; title prefilled" },
+        { "order": 2, "action": "Set start date, assignee (defaults OK)", "expected": "Create button enabled" },
+        { "order": 3, "action": "Click + Create Action", "expected": "Toast 'Action created.'; modal closes" },
+        { "order": 4, "action": "API: POST tasks/", "expected": "201; action in list" }
+      ],
+      "matrixCases": ["P-B03", "P-C01"],
+      "testData": ["TS-A01"],
+      "spec": "tests/thinkspace/workflow/03-create-action.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-BUCKET-03",
+      "name": "Convert bucket idea → Routine action",
+      "priority": "P2",
+      "persona": "Licensed user",
+      "goal": "Start recurring action from bucket",
+      "preconditions": ["Bucket item exists"],
+      "steps": [
+        { "order": 1, "action": "Bucket row → click Routine", "expected": "Quick-create in Routine mode" },
+        { "order": 2, "action": "Configure recurrence → save", "expected": "Routine series created" }
+      ],
+      "matrixCases": ["P-B04"],
+      "testData": ["TS-A06"],
+      "spec": "tests/thinkspace/workflow/02-bucketlist.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-BUCKET-04",
+      "name": "Remove bucket item without creating action",
+      "priority": "P2",
+      "persona": "Licensed user",
+      "goal": "Discard captured idea",
+      "preconditions": ["Bucket item exists"],
+      "steps": [
+        { "order": 1, "action": "Click ✕ on bucket row", "expected": "Row removed" }
+      ],
+      "matrixCases": ["P-B06"],
+      "spec": "tests/thinkspace/workflow/02-bucketlist.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-BUCKET-N01",
+      "name": "Reject whitespace-only bucket title",
+      "priority": "P2",
+      "persona": "Licensed user",
+      "goal": "Validation prevents empty bucket entries",
+      "preconditions": ["Bucketlist open"],
+      "steps": [
+        { "order": 1, "action": "Enter spaces only → Enter", "expected": "No new row" }
+      ],
+      "matrixCases": ["N-B01"],
+      "spec": "tests/thinkspace/workflow/02-bucketlist.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-CREATE-01",
+      "name": "Create action with description",
+      "priority": "P1",
+      "persona": "Licensed user",
+      "goal": "Persist task_details on create",
+      "preconditions": ["Quick-create open"],
+      "steps": [
+        { "order": 1, "action": "Fill title + description → + Create Action", "expected": "Action saved" },
+        { "order": 2, "action": "Open detail modal", "expected": "Description matches input" }
+      ],
+      "matrixCases": ["P-C03"],
+      "testData": ["TS-A07"],
+      "spec": "tests/thinkspace/workflow/03-create-action.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-CREATE-N01",
+      "name": "Block create without title",
+      "priority": "P1",
+      "persona": "Licensed user",
+      "goal": "Form validation on required title",
+      "preconditions": ["Quick-create open"],
+      "steps": [
+        { "order": 1, "action": "Clear title field", "expected": "+ Create Action disabled" }
+      ],
+      "matrixCases": ["N-C01"],
+      "testData": ["TS-A05"],
+      "spec": "tests/thinkspace/workflow/03-create-action.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-CREATE-N02",
+      "name": "Cancel quick-create discards changes",
+      "priority": "P2",
+      "persona": "Licensed user",
+      "goal": "No persistence on cancel",
+      "preconditions": ["Quick-create open with edits"],
+      "steps": [
+        { "order": 1, "action": "Click Cancel", "expected": "Modal closes; no 'Action created.' toast" }
+      ],
+      "matrixCases": ["N-C08"],
+      "spec": "tests/thinkspace/workflow/03-create-action.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-READ-01",
+      "name": "Open action from Today list",
+      "priority": "P2",
+      "persona": "Licensed user",
+      "goal": "Read action via list row click",
+      "preconditions": ["Action visible in Today list"],
+      "steps": [
+        { "order": 1, "action": "Click row with action title", "expected": "URL /thinkspace/task/:id; modal open" }
+      ],
+      "matrixCases": ["P-D01"],
+      "spec": "tests/thinkspace/workflow/04-read-list.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-DETAIL-01",
+      "name": "Browse all detail modal tabs",
+      "priority": "P1",
+      "persona": "Licensed user",
+      "goal": "Verify tab navigation in detail modal",
+      "preconditions": ["Detail modal open"],
+      "steps": [
+        { "order": 1, "action": "Click Progress tab", "expected": "Tab active" },
+        { "order": 2, "action": "Click Updates tab", "expected": "Tab active" },
+        { "order": 3, "action": "Click Attachments tab", "expected": "Tab active" },
+        { "order": 4, "action": "Click Hierarchy tab", "expected": "Tab active" }
+      ],
+      "matrixCases": ["P-E01"],
+      "spec": "tests/thinkspace/workflow/05-detail-update.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-UPDATE-01",
+      "name": "Edit and save description",
+      "priority": "P1",
+      "persona": "Licensed user (assigner/edit permission)",
+      "goal": "PATCH task_details via UI",
+      "preconditions": ["Detail modal open"],
+      "steps": [
+        { "order": 1, "action": "Change description textarea", "expected": "Text updated in field" },
+        { "order": 2, "action": "Click Save Description", "expected": "Persisted after reload" }
+      ],
+      "matrixCases": ["P-E02"],
+      "spec": "tests/thinkspace/workflow/05-detail-update.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-UPDATE-02",
+      "name": "Set progress percentage",
+      "priority": "P1",
+      "persona": "Licensed user (assignee or staff)",
+      "goal": "Update progress via slider",
+      "preconditions": ["Detail modal open → Progress tab"],
+      "steps": [
+        { "order": 1, "action": "Move slider to 50%", "expected": "Slider shows 50" },
+        { "order": 2, "action": "Click Save if shown", "expected": "API set-task-progress succeeds" }
+      ],
+      "matrixCases": ["P-E03"],
+      "testData": ["TS-A04"],
+      "spec": "tests/thinkspace/workflow/05-detail-update.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-UPDATE-03",
+      "name": "Post progress update comment",
+      "priority": "P1",
+      "persona": "Licensed user",
+      "goal": "Add timeline note visible under Updates",
+      "preconditions": ["Detail modal open"],
+      "steps": [
+        { "order": 1, "action": "Type in 'Post a progress update...'", "expected": "Post enabled" },
+        { "order": 2, "action": "Click Post", "expected": "Comment in Updates tab" }
+      ],
+      "matrixCases": ["P-E04"],
+      "spec": "tests/thinkspace/workflow/05-detail-update.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-UPDATE-N01",
+      "name": "Block empty progress post",
+      "priority": "P2",
+      "persona": "Licensed user",
+      "goal": "Post disabled when comment empty",
+      "preconditions": ["Detail modal open"],
+      "steps": [
+        { "order": 1, "action": "Clear update input", "expected": "Post button disabled" }
+      ],
+      "matrixCases": ["N-E01"],
+      "spec": "tests/thinkspace/workflow/05-detail-update.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-LIFE-01",
+      "name": "Mark action Done",
+      "priority": "P1",
+      "persona": "Licensed user",
+      "goal": "Complete action (100% / done state)",
+      "preconditions": ["Open in-progress action", "Not already done"],
+      "steps": [
+        { "order": 1, "action": "Progress tab → click Done", "expected": "Completion feedback; Delete may become disabled" }
+      ],
+      "matrixCases": ["P-F01"],
+      "testData": ["TS-A04"],
+      "spec": "tests/thinkspace/workflow/06-lifecycle.ui.spec.ts",
+      "automated": true,
+      "note": "After Done, Delete is disabled — do not combine with WF-LIFE-02 on same record"
+    },
+    {
+      "id": "WF-LIFE-02",
+      "name": "Delete action from detail",
+      "priority": "P1",
+      "persona": "Licensed user (assigner)",
+      "goal": "Remove action permanently",
+      "preconditions": ["Action not marked Done"],
+      "steps": [
+        { "order": 1, "action": "Click Delete in detail modal", "expected": "Modal closes; URL back to list" }
+      ],
+      "matrixCases": ["P-F04"],
+      "testData": ["TS-A10"],
+      "spec": "tests/thinkspace/workflow/06-lifecycle.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-LIFE-03",
+      "name": "Full Action CRUD lifecycle",
+      "priority": "P0",
+      "persona": "Licensed user",
+      "goal": "End-to-end create → read → update → delete",
+      "preconditions": ["Clean session", "Bucketlist available"],
+      "steps": [
+        { "order": 1, "action": "Bucket → Specific → create", "expected": "Action created", "crud": "Create" },
+        { "order": 2, "action": "Open from Today list", "expected": "Detail modal", "crud": "Read" },
+        { "order": 3, "action": "Update description", "expected": "Saved", "crud": "Update" },
+        { "order": 4, "action": "Set progress", "expected": "Slider updated", "crud": "Update" },
+        { "order": 5, "action": "Delete", "expected": "Removed", "crud": "Delete" }
+      ],
+      "matrixCases": ["P-F05"],
+      "testData": ["TS-A01"],
+      "spec": "tests/thinkspace/workflow/06-lifecycle.ui.spec.ts",
+      "demoSpec": "tests/thinkspace/demo/action-module-flow.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-WEEK-01",
+      "name": "Week view navigation",
+      "priority": "P2",
+      "persona": "Licensed user",
+      "goal": "Browse adjacent weeks in calendar scope",
+      "preconditions": ["On ?view=week"],
+      "steps": [
+        { "order": 1, "action": "Verify Previous/Next week buttons visible", "expected": "Controls shown" },
+        { "order": 2, "action": "Click Previous week", "expected": "Still in week view" },
+        { "order": 3, "action": "Click Next week", "expected": "Still in week view" }
+      ],
+      "matrixCases": ["P-G01", "P-G02"],
+      "spec": "tests/thinkspace/workflow/07-week-view.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-UPLOAD-01",
+      "name": "Upload file on action Attachments tab",
+      "priority": "P1",
+      "persona": "Licensed user",
+      "goal": "Attach a document to an existing action",
+      "preconditions": ["Action exists"],
+      "steps": [
+        { "order": 1, "action": "Open detail → Attachments tab", "expected": "Dropzone visible" },
+        { "order": 2, "action": "Select file → Upload", "expected": "File in attachment list", "crud": "Update" }
+      ],
+      "matrixCases": ["P-E05"],
+      "demoFile": "src/data/demo/sample-action-attachment.txt",
+      "spec": "tests/thinkspace/workflow/09-upload-workflows.ui.spec.ts",
+      "automated": true
+    },
+    {
+      "id": "WF-UPLOAD-02",
+      "name": "Create action with attachment in quick-create",
+      "priority": "P2",
+      "persona": "Licensed user",
+      "goal": "Add files before saving new action",
+      "preconditions": ["Quick-create open"],
+      "steps": [
+        { "order": 1, "action": "Use #create-attachments-input", "expected": "File listed in modal" },
+        { "order": 2, "action": "+ Create Action", "expected": "DMS + task attachment stored" }
+      ],
+      "matrixCases": ["P-C04"],
+      "automated": false
+    },
+    {
+      "id": "WF-UPLOAD-03",
+      "name": "Agenda bulk Excel import",
+      "priority": "P2",
+      "persona": "Licensed user",
+      "goal": "Import many agendas from template",
+      "preconditions": ["AgendasPage with Bulk import button (not compact Action embed)"],
+      "steps": [
+        { "order": 1, "action": "Download Excel template", "expected": "Template file" },
+        { "order": 2, "action": "Upload filled workbook", "expected": "created_count / updated_count" }
+      ],
+      "matrixCases": ["P-AG07"],
+      "api": "thinkspace/agendas/bulk-upload/",
+      "automated": false,
+      "note": "Hidden in /thinkspace/task Agenda/Action compact view"
+    },
+    {
+      "id": "WF-UPLOAD-DEMO",
+      "name": "Upload business demo CSV on action (Agenda/Action testing)",
+      "priority": "P0",
+      "persona": "Licensed user",
+      "goal": "Attach the 25-column demo file from QA spec to an action",
+      "preconditions": ["Action exists", "Demo CSV in src/data/demo/"],
+      "steps": [
+        { "order": 1, "action": "Open detail → Attachments", "expected": "Dropzone visible" },
+        { "order": 2, "action": "Upload agenda-action-upload-demo-template.csv", "expected": "File listed", "crud": "Update" }
+      ],
+      "matrixCases": ["P-I02"],
+      "demoFile": "src/data/demo/agenda-action-upload-demo-template.csv",
+      "specFile": "src/data/demo/agenda-action-upload-demo-spec.json",
+      "automated": true
+    }
+  ],
+  "recommendedExecutionOrder": [
+    "WF-AUTH-01",
+    "WF-AUTH-02",
+    "WF-NAV-01",
+    "WF-NAV-02",
+    "WF-BUCKET-01",
+    "WF-BUCKET-02",
+    "WF-CREATE-01",
+    "WF-READ-01",
+    "WF-DETAIL-01",
+    "WF-UPDATE-01",
+    "WF-UPDATE-02",
+    "WF-UPDATE-03",
+    "WF-UPLOAD-01",
+    "WF-UPLOAD-DEMO",
+    "WF-LIFE-03",
+    "WF-LIFE-01",
+    "WF-LIFE-02",
+    "WF-WEEK-01",
+    "WF-BUCKET-N01",
+    "WF-CREATE-N01",
+    "WF-CREATE-N02",
+    "WF-UPDATE-N01"
+  ],
+  "entities": {
+    "BucketItem": { "crud": ["Create", "Read", "Delete"], "api": "bucket-list/" },
+    "Action": { "crud": ["Create", "Read", "Update", "Delete"], "api": "tasks/" },
+    "ActionUpdate": { "crud": ["Create"], "api": "post-task-update/" },
+    "ActionProgress": { "crud": ["Update"], "api": "set-task-progress/" },
+    "ActionAttachment": { "crud": ["Create", "Read", "Delete"], "api": "add-attachment-to-task/" },
+    "AgendaBulk": { "crud": ["Create", "Update"], "api": "agendas/bulk-upload/" },
+    "ActionDemoUpload": { "crud": ["Update"], "api": "add-attachment-to-task/", "demoFile": "agenda-action-upload-demo-template.csv" }
+  }
+}
