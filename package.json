@@ -1,0 +1,42 @@
+{
+  "name": "@maithanerp/testing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright UI automation for Maithan ERP — Thinkspace Actions",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "postinstall": "playwright install --with-deps chromium",
+    "setup": "npm install",
+    "start": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-stack.ps1",
+    "test": "node scripts/run-tests.mjs",
+    "test:thinkspace": "node scripts/run-tests.mjs",
+    "test:positive": "playwright test tests/thinkspace/workflow --project=erp-authenticated --grep @positive",
+    "test:negative": "playwright test tests/thinkspace/workflow --project=erp-authenticated --grep @negative",
+    "test:playwright": "playwright test tests/thinkspace/workflow --project=erp-authenticated",
+    "test:headed": "playwright test tests/thinkspace/workflow --project=erp-authenticated --headed",
+    "test:ui": "playwright test tests/thinkspace/workflow --project=erp-authenticated --ui",
+    "test:debug": "playwright test tests/thinkspace/workflow --project=erp-authenticated --debug",
+    "test:ci": "cross-env CI=true playwright test tests/thinkspace/workflow --project=erp-authenticated",
+    "report": "playwright show-report",
+    "report:allure": "python scripts/allure_report.py",
+    "report:allure:open": "python scripts/allure_report.py --open",
+    "report:allure:serve": "python scripts/allure_report.py --serve",
+    "codegen": "playwright codegen",
+    "install:browsers": "playwright install --with-deps chromium",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.21",
+    "allure-commandline": "^2.42.1",
+    "allure-playwright": "^3.10.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.5.0",
+    "typescript": "^5.8.3",
+    "winston": "^3.17.0",
+    "zod": "^3.25.28"
+  }
+}

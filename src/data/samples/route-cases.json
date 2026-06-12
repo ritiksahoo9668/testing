@@ -1,0 +1,14 @@
+{
+  "cases": [
+    {
+      "name": "login-route",
+      "path": "/login",
+      "expectedSelector": "#login-username"
+    },
+    {
+      "name": "home-route-requires-auth",
+      "path": "/",
+      "expectedSelector": "nav, [role=\"navigation\"]"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+import type { Project } from '@playwright/test';
+import { devices } from '@playwright/test';
+import { e2eConfig } from './environment.js';
+
+const sharedUse = {
+  baseURL: e2eConfig.erp.uiBaseUrl,
+  trace: e2eConfig.trace,
+  video: e2eConfig.video,
+  screenshot: e2eConfig.screenshot,
+  actionTimeout: e2eConfig.actionTimeoutMs,
+  navigationTimeout: e2eConfig.navigationTimeoutMs,
+  ignoreHTTPSErrors: true,
+  locale: 'en-US',
+  timezoneId: 'Asia/Kolkata',
+  launchOptions: {
+    slowMo: e2eConfig.slowMo,
+  },
+};
+
+/** UI-only browser projects for Thinkspace Actions workflow tests. */
+export const browserProjects: Project[] = [
+  {
+    name: 'chromium-guest',
+    grep: /@unauthenticated/,
+    grepInvert: /@authenticated/,
+    testMatch: /thinkspace\/workflow\/.*\.ui\.spec\.ts/,
+    use: {
+      ...sharedUse,
+      ...devices['Desktop Chrome'],
+    },
+  },
+  {
+    name: 'setup-erp-auth',
+    testMatch: /.*\.setup\.ts/,
+    use: {
+      ...devices['Desktop Chrome'],
+      baseURL: e2eConfig.erp.uiBaseUrl,
+    },
+  },
+  {
+    name: 'erp-authenticated',
+    dependencies: ['setup-erp-auth'],
+    grep: /@thinkspace/,
+    grepInvert: /@unauthenticated/,
+    testMatch: /thinkspace\/workflow\/.*\.ui\.spec\.ts/,
+    use: {
+      ...sharedUse,
+      ...devices['Desktop Chrome'],
+      storageState: e2eConfig.erp.authStorageStatePath,
+    },
+  },
+];

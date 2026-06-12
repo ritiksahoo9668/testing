@@ -1,0 +1,2 @@
+# Visual regression baselines are generated with:
+# npx playwright test --update-snapshots

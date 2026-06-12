@@ -1,0 +1,2 @@
+# Python stdlib only for Allure report scripts (no extra packages required).
+# Playwright tests run via Node.js; Allure results come from allure-playwright.

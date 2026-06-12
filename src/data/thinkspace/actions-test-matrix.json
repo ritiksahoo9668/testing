@@ -1,0 +1,709 @@
+{
+  "module": "Thinkspace",
+  "subModule": "Actions",
+  "moduleLabel": "Thinkspace module",
+  "subModuleLabel": "Action Master",
+  "route": "/thinkspace/task",
+  "sections": {
+    "A": "A. Access & navigation",
+    "B": "B. Bucketlist",
+    "C": "C. Create action (UI)",
+    "D": "D. List & filters",
+    "E": "E. Detail modal",
+    "F": "F. Lifecycle & status",
+    "G": "G. Week navigation",
+    "H": "H. Create agenda (UI)"
+  },
+  "cases": [
+    {
+      "id": "P-A01",
+      "section": "A",
+      "priority": "P0",
+      "type": "positive",
+      "crud": "Read",
+      "entity": "Actions workspace",
+      "workflowStep": "Sign in → navigate to /thinkspace/task",
+      "uiLocation": "TaskPage — header, work mode toggle, Today view menu",
+      "title": "Licensed user opens the Actions workspace",
+      "what": "A user with the thinkspace-task license opens the Actions module and sees the main workspace layout without errors.",
+      "steps": "1. Sign in with automation credentials.\n2. Navigate to /thinkspace/task.\n3. Confirm the work mode group and Today/Week view menu are visible.\n4. Confirm the page is not redirected to /403.",
+      "validationPoints": [
+        "URL contains /thinkspace/task",
+        "Work mode group is visible",
+        "View menu shows Actions · Today or Week"
+      ],
+      "expected": "Actions workspace loads with navigation controls visible.",
+      "automated": true
+    },
+    {
+      "id": "P-A02",
+      "section": "A",
+      "priority": "P1",
+      "type": "positive",
+      "crud": "Read",
+      "entity": "Actions workspace",
+      "workflowStep": "Today view → Week view → Today view",
+      "uiLocation": "TaskPage — view menu (Actions · Today / Week)",
+      "title": "Switch between Today and Week views",
+      "what": "The user switches calendar scope using the view menu and the URL reflects the selected view.",
+      "steps": "1. Open /thinkspace/task (Today).\n2. Open the view menu and choose Week.\n3. Verify URL contains view=week.\n4. Switch back to Today and verify week param is cleared.",
+      "validationPoints": [
+        "Week selection updates URL",
+        "Returning to Today restores default view"
+      ],
+      "expected": "View toggles correctly between Today and Week.",
+      "automated": true
+    },
+    {
+      "id": "P-A03",
+      "section": "A",
+      "priority": "P1",
+      "type": "positive",
+      "crud": "Read",
+      "entity": "Actions workspace",
+      "workflowStep": "Open Actions → switch work mode to Agenda/Action",
+      "uiLocation": "TaskPage — Work mode toggle (Agenda/Action)",
+      "title": "Switch work mode to Agenda/Action",
+      "what": "The user changes work mode to Agenda/Action to see agenda-oriented columns and optional type filters.",
+      "steps": "1. Open /thinkspace/task.\n2. Click Agenda/Action in the work mode toggle.\n3. Confirm the Agenda/Action mode button stays active.",
+      "validationPoints": [
+        "Agenda/Action mode is selectable",
+        "Page remains on Actions workspace"
+      ],
+      "expected": "Agenda/Action work mode is active.",
+      "automated": true
+    },
+    {
+      "id": "P-A04",
+      "section": "A",
+      "priority": "P1",
+      "type": "positive",
+      "crud": "Read",
+      "entity": "Action",
+      "workflowStep": "Prepare action → open /thinkspace/task/:id",
+      "uiLocation": "TaskPage — detail modal (deep link)",
+      "title": "Deep link opens the correct action detail modal",
+      "what": "Opening a direct URL to a specific action loads the detail modal with the matching title.",
+      "steps": "1. Create a test action (setup).\n2. Navigate to /thinkspace/task/{id}.\n3. Verify the detail modal opens and shows the action title.",
+      "validationPoints": [
+        "URL includes task id",
+        "Detail modal shell is visible",
+        "Title text matches the created action"
+      ],
+      "expected": "Detail modal opens for the linked action id.",
+      "automated": true
+    },
+    {
+      "id": "N-A01",
+      "section": "A",
+      "priority": "P0",
+      "type": "negative",
+      "crud": "Read",
+      "entity": "Actions workspace",
+      "workflowStep": "Guest session → open /thinkspace/task",
+      "uiLocation": "Login redirect",
+      "title": "Unauthenticated user cannot access Actions",
+      "what": "A user who is not signed in must be redirected to login when opening the Actions route.",
+      "steps": "1. Clear session (no storage state).\n2. Navigate to /thinkspace/task.\n3. Verify redirect to /login.",
+      "validationPoints": [
+        "User is not on Actions workspace",
+        "Login page is shown"
+      ],
+      "expected": "Redirect to /login.",
+      "automated": true
+    },
+    {
+      "id": "N-A02",
+      "section": "A",
+      "priority": "P0",
+      "type": "negative",
+      "crud": "Read",
+      "entity": "Actions workspace",
+      "workflowStep": "Denied user → open /thinkspace/task",
+      "uiLocation": "403 forbidden page",
+      "title": "User without thinkspace-task license sees forbidden page",
+      "what": "A signed-in user who lacks the thinkspace-task module license must not access the Actions workspace.",
+      "steps": "1. Sign in as a user without thinkspace-task license (E2E_THINKSPACE_DENIED_USER).\n2. Open /thinkspace/task.\n3. Verify /403.",
+      "validationPoints": [
+        "Actions workspace is not shown",
+        "URL ends with /403"
+      ],
+      "expected": "Forbidden page (/403).",
+      "automated": false
+    },
+    {
+      "id": "P-B01",
+      "section": "B",
+      "priority": "P1",
+      "type": "positive",
+      "crud": "Create",
+      "entity": "Bucket item",
+      "workflowStep": "Open bucketlist → type idea → Enter",
+      "uiLocation": "Bucketlist panel — input 'What's on your mind?'",
+      "title": "Add a bucketlist item with Enter key",
+      "what": "The user captures a quick idea in the bucketlist before converting it to a formal action.",
+      "steps": "1. Open /thinkspace/task.\n2. Open the bucketlist panel.\n3. Type a title in the bucket input.\n4. Press Enter.\n5. Verify the item appears in the list.",
+      "validationPoints": [
+        "Item row is visible with the typed title",
+        "Toast 'Added to bucketlist.' may appear"
+      ],
+      "expected": "New bucket item is listed in the panel.",
+      "automated": true
+    },
+    {
+      "id": "P-B02",
+      "section": "B",
+      "priority": "P2",
+      "type": "positive",
+      "crud": "Read",
+      "entity": "Bucketlist panel",
+      "workflowStep": "Actions page → FAB opens bucketlist",
+      "uiLocation": "TaskPage — FAB 'Open bucketlist'",
+      "title": "Open bucketlist using the floating action button",
+      "what": "When the bucketlist side panel is closed, the user can reopen it from the FAB.",
+      "steps": "1. Open /thinkspace/task.\n2. Click 'Open bucketlist' if the panel is closed.\n3. Verify bucketlist heading and input are visible.",
+      "validationPoints": [
+        "Bucketlist panel is visible",
+        "Input placeholder is shown"
+      ],
+      "expected": "Bucketlist panel opens.",
+      "automated": true
+    },
+    {
+      "id": "P-B03",
+      "section": "B",
+      "priority": "P1",
+      "type": "positive",
+      "crud": "Create",
+      "entity": "Action (from bucket)",
+      "workflowStep": "Bucket item → click Specific → quick-create modal",
+      "uiLocation": "Bucket row — Specific button → Quick-create modal",
+      "title": "Start Specific action from a bucket item",
+      "what": "Clicking Specific on a bucket row opens the quick-create modal with the bucket title prefilled.",
+      "steps": "1. Add an item to the bucketlist.\n2. Click Specific on that row.\n3. Verify quick-create modal opens.\n4. Verify title field contains the bucket text.",
+      "validationPoints": [
+        "Quick-create modal visible",
+        "Title is prefilled from bucket"
+      ],
+      "expected": "Quick-create opens in Specific mode with prefilled title.",
+      "automated": true
+    },
+    {
+      "id": "P-B04",
+      "section": "B",
+      "priority": "P2",
+      "type": "positive",
+      "crud": "Create",
+      "entity": "Action (Routine)",
+      "workflowStep": "Bucket item → click Routine → quick-create modal",
+      "uiLocation": "Bucket row — Routine button → Quick-create modal",
+      "title": "Start Routine action from a bucket item",
+      "what": "Clicking Routine on a bucket row opens the quick-create modal configured for routine/recurring actions.",
+      "steps": "1. Add an item to the bucketlist.\n2. Click Routine on that row.\n3. Verify quick-create modal opens.\n4. Verify Routine action type is selected.",
+      "validationPoints": [
+        "Modal opens",
+        "Routine radio or mode is active"
+      ],
+      "expected": "Quick-create opens in Routine mode.",
+      "automated": true
+    },
+    {
+      "id": "P-B06",
+      "section": "B",
+      "priority": "P2",
+      "type": "positive",
+      "crud": "Delete",
+      "entity": "Bucket item",
+      "workflowStep": "Bucket item → click ✕ remove",
+      "uiLocation": "Bucketlist row — delete (✕) button",
+      "title": "Delete a bucketlist item",
+      "what": "The user removes an idea from the bucketlist without creating an action.",
+      "steps": "1. Add a bucket item.\n2. Click the ✕ button on that row.\n3. Verify the item disappears from the list.",
+      "validationPoints": [
+        "Row is removed from bucketlist",
+        "No error toast"
+      ],
+      "expected": "Bucket item is deleted from the panel.",
+      "automated": true
+    },
+    {
+      "id": "N-B01",
+      "section": "B",
+      "priority": "P2",
+      "type": "negative",
+      "crud": "Create",
+      "entity": "Bucket item",
+      "workflowStep": "Bucket input → spaces only → Enter",
+      "uiLocation": "Bucketlist input",
+      "title": "Empty or whitespace-only bucket title is rejected",
+      "what": "The application must not create bucket items when the user submits only whitespace.",
+      "steps": "1. Open bucketlist.\n2. Enter only spaces in the input.\n3. Press Enter.\n4. Verify no new row is added.",
+      "validationPoints": [
+        "Bucket item count unchanged",
+        "No blank row appears"
+      ],
+      "expected": "Nothing is added to the bucketlist.",
+      "automated": true
+    },
+    {
+      "id": "P-C01",
+      "section": "C",
+      "priority": "P0",
+      "type": "positive",
+      "crud": "Create",
+      "entity": "Action (Specific)",
+      "workflowStep": "Bucket → Specific → fill form → + Create Action",
+      "uiLocation": "Quick-create modal — + Create Action",
+      "title": "Create a Specific action from bucket quick-create",
+      "what": "The user converts a bucket idea into a saved Specific action with required fields completed.",
+      "steps": "1. Add bucket item.\n2. Click Specific.\n3. Ensure title, start date, and assignee are set.\n4. Click + Create Action.\n5. Verify success toast and modal closes.",
+      "validationPoints": [
+        "Create button enabled before submit",
+        "Toast 'Action created.'",
+        "Modal closes"
+      ],
+      "expected": "Specific action is created successfully.",
+      "automated": true
+    },
+    {
+      "id": "P-C03",
+      "section": "C",
+      "priority": "P1",
+      "type": "positive",
+      "crud": "Create",
+      "entity": "Action",
+      "workflowStep": "Quick-create → enter description → save → verify in detail",
+      "uiLocation": "Quick-create modal — description field; Detail modal — description",
+      "title": "Create action with description notes",
+      "what": "Description text entered during creation is persisted and visible when opening the action detail.",
+      "steps": "1. Create action with title and description via quick-create.\n2. Open the action detail.\n3. Verify description field contains saved text.",
+      "validationPoints": [
+        "Description saved on create",
+        "Detail modal shows same description"
+      ],
+      "expected": "Description persists in task_details.",
+      "automated": true
+    },
+    {
+      "id": "N-C01",
+      "section": "C",
+      "priority": "P1",
+      "type": "negative",
+      "crud": "Create",
+      "entity": "Action",
+      "workflowStep": "Quick-create → clear title → attempt save",
+      "uiLocation": "Quick-create modal — title field; + Create Action button",
+      "title": "Cannot save quick-create without a title",
+      "what": "Form validation must block submission when the action title is empty.",
+      "steps": "1. Open quick-create from bucket.\n2. Clear the title field.\n3. Verify + Create Action is disabled.",
+      "validationPoints": [
+        "Create button disabled",
+        "No modal close on click"
+      ],
+      "expected": "Create button remains disabled.",
+      "automated": true
+    },
+    {
+      "id": "N-C08",
+      "section": "C",
+      "priority": "P2",
+      "type": "negative",
+      "crud": "Create",
+      "entity": "Action",
+      "workflowStep": "Quick-create → Cancel",
+      "uiLocation": "Quick-create modal — Cancel button",
+      "title": "Cancel closes quick-create without creating an action",
+      "what": "Cancelling the create flow must discard changes and close the modal without persisting a new action.",
+      "steps": "1. Open quick-create from bucket.\n2. Click Cancel.\n3. Verify modal closes.\n4. Verify success toast did not appear.",
+      "validationPoints": [
+        "Modal hidden",
+        "No 'Action created.' toast"
+      ],
+      "expected": "Modal closes; no action created.",
+      "automated": true
+    },
+    {
+      "id": "P-D01",
+      "section": "D",
+      "priority": "P2",
+      "type": "positive",
+      "crud": "Read",
+      "entity": "Action list",
+      "workflowStep": "Open action row from Today view",
+      "uiLocation": "TaskPage — action list / columns",
+      "title": "Clicking an action row opens the detail modal",
+      "what": "From the Today view list, clicking an action opens its detail modal for read/update.",
+      "steps": "1. Create a test action (setup).\n2. Open /thinkspace/task.\n3. Click the row containing the action title.\n4. Verify detail modal opens.",
+      "validationPoints": [
+        "Row is clickable",
+        "Detail modal shows correct title"
+      ],
+      "expected": "Detail modal opens from list row click.",
+      "automated": true
+    },
+    {
+      "id": "P-E01",
+      "section": "E",
+      "priority": "P1",
+      "type": "positive",
+      "crud": "Read",
+      "entity": "Action detail",
+      "workflowStep": "Open detail → visit each tab",
+      "uiLocation": "Detail modal — Progress, Updates, Attachments, Hierarchy tabs",
+      "title": "All detail modal tabs are accessible",
+      "what": "The user can navigate all primary tabs in the action detail modal without errors.",
+      "steps": "1. Open an action detail.\n2. Click Progress, Updates, Attachments, and Hierarchy tabs in sequence.",
+      "validationPoints": [
+        "Each tab button is clickable",
+        "Modal stays open"
+      ],
+      "expected": "All four tabs are reachable.",
+      "automated": true
+    },
+    {
+      "id": "P-E02",
+      "section": "E",
+      "priority": "P1",
+      "type": "positive",
+      "crud": "Update",
+      "entity": "Action",
+      "workflowStep": "Detail → edit description → Save Description",
+      "uiLocation": "Detail modal — description textarea; Save Description button",
+      "title": "Edit and save action description",
+      "what": "The user updates the long-form description in the detail modal and saves the change.",
+      "steps": "1. Open action detail.\n2. Change description text.\n3. Click Save Description.\n4. Reload page and verify text persisted.",
+      "validationPoints": [
+        "Save Description succeeds",
+        "Text remains after reload"
+      ],
+      "expected": "Description is updated and persisted.",
+      "automated": true
+    },
+    {
+      "id": "P-E03",
+      "section": "E",
+      "priority": "P1",
+      "type": "positive",
+      "crud": "Update",
+      "entity": "Action progress",
+      "workflowStep": "Detail → Progress tab → set slider → Save",
+      "uiLocation": "Detail modal — Progress tab; range input; Save button",
+      "title": "Update action progress percentage",
+      "what": "The user sets progress on the Progress tab and saves; the UI reflects the new value.",
+      "steps": "1. Open action detail.\n2. Go to Progress tab.\n3. Set slider to 50%.\n4. Click Save if shown.\n5. Verify slider value in UI.",
+      "validationPoints": [
+        "Progress slider accepts input",
+        "Saved value visible in modal"
+      ],
+      "expected": "Progress updates in the detail modal.",
+      "automated": true
+    },
+    {
+      "id": "P-E04",
+      "section": "E",
+      "priority": "P1",
+      "type": "positive",
+      "crud": "Update",
+      "entity": "Action update comment",
+      "workflowStep": "Detail → type update → Post",
+      "uiLocation": "Detail modal — 'Post a progress update...' input; Post button",
+      "title": "Post a progress update comment",
+      "what": "The user posts a textual progress update that appears under the Updates section.",
+      "steps": "1. Open action detail.\n2. Type a comment in the update field.\n3. Click Post.\n4. Switch to Updates tab and verify comment text.",
+      "validationPoints": [
+        "Post button enabled with text",
+        "Comment visible under Updates"
+      ],
+      "expected": "Update comment appears in Updates tab.",
+      "automated": true
+    },
+    {
+      "id": "N-E01",
+      "section": "E",
+      "priority": "P2",
+      "type": "negative",
+      "crud": "Update",
+      "entity": "Action update comment",
+      "workflowStep": "Detail → empty update field",
+      "uiLocation": "Detail modal — Post button",
+      "title": "Cannot post an empty progress update",
+      "what": "The Post button must stay disabled when the update comment field is empty.",
+      "steps": "1. Open action detail.\n2. Clear the update input.\n3. Verify Post is disabled.",
+      "validationPoints": [
+        "Post button disabled with empty input"
+      ],
+      "expected": "Post button disabled.",
+      "automated": true
+    },
+    {
+      "id": "P-F01",
+      "section": "F",
+      "priority": "P1",
+      "type": "positive",
+      "crud": "Update",
+      "entity": "Action status",
+      "workflowStep": "Detail → Progress → Done",
+      "uiLocation": "Detail modal — Done button",
+      "title": "Mark action as Done",
+      "what": "The user marks an in-progress action as complete using the Done control.",
+      "steps": "1. Open action detail.\n2. Click Done on Progress tab.\n3. Verify completion feedback (modal may close or status updates).",
+      "validationPoints": [
+        "Done button clickable",
+        "No error state after click"
+      ],
+      "expected": "Action marked done (Done & dusted / 100% progress).",
+      "automated": true
+    },
+    {
+      "id": "P-F04",
+      "section": "F",
+      "priority": "P1",
+      "type": "positive",
+      "crud": "Delete",
+      "entity": "Action",
+      "workflowStep": "Detail → Delete action",
+      "uiLocation": "Detail modal — Delete button",
+      "title": "Delete action from detail modal",
+      "what": "The user permanently removes an action using Delete in the detail modal.",
+      "steps": "1. Open action detail.\n2. Click Delete.\n3. Verify modal closes and URL returns to list view.",
+      "validationPoints": [
+        "Modal closes",
+        "URL is /thinkspace/task without task id"
+      ],
+      "expected": "Action deleted; detail modal closes.",
+      "automated": true
+    },
+    {
+      "id": "P-F05",
+      "section": "F",
+      "priority": "P1",
+      "type": "positive",
+      "crud": "Update → Delete",
+      "entity": "Action",
+      "workflowStep": "Create → open detail → edit description → progress → delete",
+      "uiLocation": "Full workflow across list, quick-create, and detail modal",
+      "title": "End-to-end lifecycle: create, update, and delete",
+      "what": "Validates the complete user journey from creating an action through editing and deleting it in the UI.",
+      "steps": "1. Create action via quick-create.\n2. Re-open from list.\n3. Update description.\n4. Set progress.\n5. Delete from detail.",
+      "validationPoints": [
+        "Each CRUD step succeeds in UI",
+        "Final delete closes modal"
+      ],
+      "expected": "Full lifecycle completes without errors.",
+      "automated": true
+    },
+    {
+      "id": "P-G01",
+      "section": "G",
+      "priority": "P2",
+      "type": "positive",
+      "crud": "Read",
+      "entity": "Week view",
+      "workflowStep": "Open week view → verify navigation controls",
+      "uiLocation": "TaskPage — ?view=week; Previous/Next week buttons",
+      "title": "Week view shows week navigation controls",
+      "what": "In Week view the user sees controls to move to previous and next weeks.",
+      "steps": "1. Open /thinkspace/task?view=week.\n2. Locate Previous week and Next week buttons.",
+      "validationPoints": [
+        "Previous week visible",
+        "Next week visible"
+      ],
+      "expected": "Week navigation buttons are visible.",
+      "automated": true
+    },
+    {
+      "id": "P-G02",
+      "section": "G",
+      "priority": "P2",
+      "type": "positive",
+      "crud": "Read",
+      "entity": "Week view",
+      "workflowStep": "Week view → previous week → next week",
+      "uiLocation": "TaskPage — week navigation buttons",
+      "title": "Navigate previous and next week",
+      "what": "The user can browse adjacent weeks while remaining in Week view mode.",
+      "steps": "1. Open week view.\n2. Click Previous week.\n3. Click Next week.\n4. Verify still in week view (URL contains view=week).",
+      "validationPoints": [
+        "Stays in week mode",
+        "Navigation buttons remain usable"
+      ],
+      "expected": "Week navigation works without leaving week view.",
+      "automated": true
+    },
+    {
+      "id": "P-AG01",
+      "section": "H",
+      "priority": "P1",
+      "type": "positive",
+      "crud": "Create",
+      "entity": "Agenda",
+      "workflowStep": "Agendas header click → Create New Agenda modal",
+      "uiLocation": "AgendasPage compact header — 'Click to create a new Agenda'; TaskPage modal",
+      "title": "Open Create Agenda modal from Agendas header",
+      "what": "Clicking the Agendas column header opens the Create New Agenda modal with workspace category Agenda, assignee options, and attachment zone.",
+      "steps": "1. Open /thinkspace/task in Agenda/Action mode.\n2. Click the Agendas (N) header.\n3. Verify '+ Create New Agenda' modal with Agenda workspace selected.\n4. Verify attachment drop zone references Docflow/Attachment/agenda.",
+      "validationPoints": [
+        "Modal title '+ Create New Agenda'",
+        "Adding to: Agenda context label",
+        "Self (Me) assignee default",
+        "Attachment zone visible"
+      ],
+      "expected": "Create Agenda modal opens with correct fields.",
+      "automated": true
+    },
+    {
+      "id": "P-AG02",
+      "section": "H",
+      "priority": "P0",
+      "type": "positive",
+      "crud": "Create",
+      "entity": "Agenda",
+      "workflowStep": "Agendas header → Create modal → Self (Me) assignee → + Create Agenda",
+      "uiLocation": "AgendasPage header; Create New Agenda modal — Agenda titles; Self (Me) radio",
+      "title": "Create agenda with Self (Me) assignee using test data TS-G01",
+      "what": "User opens Create Agenda from the Agendas column header, enters the dataset title (E2E Agenda — Weekly warehouse sync), keeps Self (Me) as assignee, and saves.",
+      "steps": "1. Click Agendas (N) header (title: Click to create a new Agenda).\n2. Verify '+ Create New Agenda' and 'Adding to: Agenda'.\n3. Fill Workspace Category Agenda, title, Start Date & Time, and Self (Me) from TS-G01.\n4. Click + Create Agenda.\n5. Verify 'Agenda created.' toast and agenda card in Agendas column.",
+      "validationPoints": [
+        "Dataset TS-G01 title prefix used",
+        "Self (Me) assignee",
+        "Success toast",
+        "Agenda visible in Agendas column UI"
+      ],
+      "expected": "Agenda created for signed-in user.",
+      "automated": true
+    },
+    {
+      "id": "P-AG05",
+      "section": "H",
+      "priority": "P0",
+      "type": "positive",
+      "crud": "Create",
+      "entity": "Agenda",
+      "workflowStep": "Create modal → External assignee → name + email → + Create Agenda",
+      "uiLocation": "Create New Agenda modal — External radio; name and email fields",
+      "title": "Create agenda with External assignee using test data TS-G02",
+      "what": "User creates an agenda assigned to an external guest by selecting External, filling name and email from TS-G02, and submitting.",
+      "steps": "1. Open Create Agenda modal.\n2. Fill title and Start Date & Time from TS-G02.\n3. Select External assignee.\n4. Fill External Person's Name and Email from test data.\n5. Click + Create Agenda.\n6. Verify success toast and agenda card in Agendas column.",
+      "validationPoints": [
+        "External radio selected",
+        "Name and email filled",
+        "Agenda visible in Agendas column UI"
+      ],
+      "expected": "Agenda created with external assignee resolved.",
+      "automated": true
+    },
+    {
+      "id": "P-AG06",
+      "section": "H",
+      "priority": "P0",
+      "type": "positive",
+      "crud": "Create",
+      "entity": "Agenda",
+      "workflowStep": "Create modal → Employee assignee → directory search → + Create Agenda",
+      "uiLocation": "Create New Agenda modal — Employee radio; employee search dropdown",
+      "title": "Create agenda with Employee assignee using test data TS-G03",
+      "what": "User creates an agenda assigned to another employee by selecting Employee, searching the directory, picking a match, and submitting.",
+      "steps": "1. Open Create Agenda modal.\n2. Fill title and Start Date & Time from TS-G03.\n3. Select Employee assignee.\n4. Open employee dropdown and search (hint: admin).\n5. Select first matching employee.\n6. Click + Create Agenda.\n7. Verify success toast and agenda card in Agendas column.",
+      "validationPoints": [
+        "Employee radio selected",
+        "Employee picked from directory",
+        "Agenda visible in Agendas column UI"
+      ],
+      "expected": "Agenda created with employee assignee.",
+      "automated": true
+    },
+    {
+      "id": "P-AG03",
+      "section": "H",
+      "priority": "P2",
+      "type": "positive",
+      "crud": "Create",
+      "entity": "Agenda (bulk)",
+      "workflowStep": "Bulk titles (one per line) → + Create Agenda",
+      "uiLocation": "Agenda Titles textarea — bulk lines",
+      "title": "Create multiple agendas from bulk title lines",
+      "what": "User enters multiple agenda titles (one per line) and the system creates each agenda.",
+      "steps": "1. Open Create Agenda modal.\n2. Enter two titles separated by newline.\n3. Click + Create Agenda.\n4. Verify both agendas exist via API.",
+      "validationPoints": [
+        "Both titles persisted",
+        "Success feedback shown"
+      ],
+      "expected": "Each non-empty line creates an agenda.",
+      "automated": true
+    },
+    {
+      "id": "P-AG04",
+      "section": "H",
+      "priority": "P2",
+      "type": "positive",
+      "crud": "Create",
+      "entity": "Agenda (from bucket)",
+      "workflowStep": "Bucketlist Agendas tab → add item → Agenda → create",
+      "uiLocation": "Bucketlist — Agendas tab; Agenda button on row",
+      "title": "Create agenda from bucketlist Agendas tab",
+      "what": "User captures an idea in the Agendas bucket category and converts it to an agenda via the Agenda quick-create flow.",
+      "steps": "1. Open bucketlist Agendas tab.\n2. Add bucket item.\n3. Click Agenda on the row.\n4. Submit Create Agenda form.",
+      "validationPoints": [
+        "Modal opens in Agenda mode",
+        "Agenda created successfully"
+      ],
+      "expected": "Agenda created from bucket item.",
+      "automated": true
+    },
+    {
+      "id": "N-AG01",
+      "section": "H",
+      "priority": "P1",
+      "type": "negative",
+      "crud": "Create",
+      "entity": "Agenda",
+      "workflowStep": "Create modal → empty title → submit blocked",
+      "uiLocation": "+ Create Agenda button",
+      "title": "Cannot create agenda without a title",
+      "what": "Validation must block submission when the agenda titles field is empty.",
+      "steps": "1. Open Create Agenda modal.\n2. Clear agenda titles.\n3. Verify + Create Agenda is disabled.",
+      "validationPoints": [
+        "Create button disabled"
+      ],
+      "expected": "Create button remains disabled.",
+      "automated": true
+    },
+    {
+      "id": "N-AG02",
+      "section": "H",
+      "priority": "P2",
+      "type": "negative",
+      "crud": "Create",
+      "entity": "Agenda",
+      "workflowStep": "Create modal → Cancel",
+      "uiLocation": "Cancel button",
+      "title": "Cancel closes Create Agenda without saving",
+      "what": "Cancelling the agenda create flow discards input and does not create an agenda.",
+      "steps": "1. Open Create Agenda modal.\n2. Enter a title.\n3. Click Cancel.\n4. Verify no success toast.",
+      "validationPoints": [
+        "Modal closes",
+        "No 'Agenda created.' toast"
+      ],
+      "expected": "No agenda created.",
+      "automated": true
+    },
+    {
+      "id": "N-AG03",
+      "section": "H",
+      "priority": "P2",
+      "type": "negative",
+      "crud": "Create",
+      "entity": "Agenda",
+      "workflowStep": "External assignee selected without name/email",
+      "uiLocation": "Agenda Assignee — External radio",
+      "title": "Cannot create agenda with External assignee missing details",
+      "what": "When External assignee is selected, name and email are required before submit.",
+      "steps": "1. Open Create Agenda modal.\n2. Enter a title.\n3. Select External assignee.\n4. Leave name and email empty.\n5. Verify + Create Agenda is disabled.",
+      "validationPoints": [
+        "Create disabled until external fields filled"
+      ],
+      "expected": "Create button disabled.",
+      "automated": true
+    }
+  ]
+}

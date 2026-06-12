@@ -1,0 +1,117 @@
+{
+  "module": "thinkspace-agendas",
+  "license": "thinkspace-task",
+  "route": "/thinkspace/task",
+  "datasets": [
+    {
+      "id": "TS-G01",
+      "name": "agenda-self-assignee",
+      "purpose": "Create an agenda assigned to the signed-in user (Self Me)",
+      "uiFlow": "Click Agendas (N) header → + Create New Agenda → Agenda titles → Self (Me) → + Create Agenda",
+      "type": "positive",
+      "matrixId": "P-AG02",
+      "uiPayload": {
+        "titlePrefix": "E2E Agenda — Weekly warehouse sync",
+        "assigneeType": "self",
+        "workspaceCategory": "Agenda",
+        "modalContext": "Adding to: Agenda",
+        "startDateOffsetHours": 0
+      }
+    },
+    {
+      "id": "TS-G02",
+      "name": "agenda-external-assignee",
+      "purpose": "Create an agenda assigned to an external person with name and email",
+      "uiFlow": "Create New Agenda → External assignee → fill name + email → + Create Agenda",
+      "type": "positive",
+      "matrixId": "P-AG05",
+      "uiPayload": {
+        "titlePrefix": "E2E Agenda — External stakeholder review",
+        "assigneeType": "external",
+        "externalName": "E2E External Guest",
+        "useExistingDirectoryEmail": true,
+        "startDateOffsetHours": 0
+      }
+    },
+    {
+      "id": "TS-G03",
+      "name": "agenda-employee-assignee",
+      "purpose": "Create an agenda assigned to another employee from the directory",
+      "uiFlow": "Create New Agenda → Employee assignee → search and select → + Create Agenda",
+      "type": "positive",
+      "matrixId": "P-AG06",
+      "uiPayload": {
+        "titlePrefix": "E2E Agenda — Cross-team planning session",
+        "assigneeType": "employee",
+        "employeeSearchHint": "admin",
+        "startDateOffsetHours": 0
+      }
+    },
+    {
+      "id": "TS-G04",
+      "name": "agenda-bulk-titles",
+      "purpose": "Create multiple agendas from bulk title lines (one per line)",
+      "uiFlow": "Create New Agenda → enter multiple titles → + Create Agenda",
+      "type": "positive",
+      "matrixId": "P-AG03",
+      "uiPayload": {
+        "assigneeType": "self",
+        "bulkTitlePrefixes": [
+          "E2E Agenda — Bulk line A safety briefing",
+          "E2E Agenda — Bulk line B ops handover"
+        ],
+        "startDateOffsetHours": 0
+      }
+    },
+    {
+      "id": "TS-G05",
+      "name": "agenda-from-bucket",
+      "purpose": "Capture agenda idea in bucketlist Agendas tab and convert to agenda",
+      "uiFlow": "Bucketlist Agendas tab → Enter → Agenda button → + Create Agenda",
+      "type": "positive",
+      "matrixId": "P-AG04",
+      "uiPayload": {
+        "titlePrefix": "E2E Agenda — Bucket idea conversion",
+        "assigneeType": "self",
+        "bucketIdeaPrefix": "E2E Bucket — Agenda idea before convert",
+        "startDateOffsetHours": 0
+      }
+    },
+    {
+      "id": "TS-G06",
+      "name": "agenda-invalid-empty-title",
+      "purpose": "UI blocks save when agenda title is empty",
+      "uiFlow": "Create New Agenda → clear titles → verify Create disabled",
+      "type": "negative",
+      "matrixId": "N-AG01",
+      "uiPayload": {
+        "assigneeType": "self",
+        "titlePrefix": ""
+      }
+    },
+    {
+      "id": "TS-G07",
+      "name": "agenda-cancel-without-save",
+      "purpose": "Cancel discards agenda create form without persisting",
+      "uiFlow": "Create New Agenda → fill title → Cancel",
+      "type": "negative",
+      "matrixId": "N-AG02",
+      "uiPayload": {
+        "titlePrefix": "E2E Agenda — Cancel discard test",
+        "assigneeType": "self"
+      }
+    },
+    {
+      "id": "TS-G08",
+      "name": "agenda-external-missing-details",
+      "purpose": "External assignee requires name and email before submit",
+      "uiFlow": "Create New Agenda → External → leave fields empty → Create disabled",
+      "type": "negative",
+      "matrixId": "N-AG03",
+      "uiPayload": {
+        "titlePrefix": "E2E Agenda — External validation guard",
+        "assigneeType": "external"
+      }
+    }
+  ]
+}

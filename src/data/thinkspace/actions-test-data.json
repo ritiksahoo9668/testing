@@ -1,0 +1,162 @@
+{
+  "module": "thinkspace-actions",
+  "license": "thinkspace-task",
+  "route": "/thinkspace/task",
+  "datasets": [
+    {
+      "id": "TS-A01",
+      "name": "specific-action-due-today",
+      "purpose": "Create a normal specific action and verify it appears in the system",
+      "uiFlow": "Bucketlist → Specific → quick-create → save",
+      "type": "positive",
+      "matrixId": "P-C01",
+      "apiPayload": {
+        "task_title": "E2E Specific — Review warehouse checklist",
+        "task_details": "Daily operational review for orch warehouse",
+        "task_type": "Specific Action",
+        "priority": "Normal",
+        "status": "Due",
+        "action_source": "Action Page",
+        "task_source_category": ""
+      }
+    },
+    {
+      "id": "TS-A02",
+      "name": "high-priority-action",
+      "purpose": "High priority action opens correctly in detail modal",
+      "uiFlow": "API create → open /thinkspace/task/:id",
+      "type": "positive",
+      "matrixId": "P-A04",
+      "apiPayload": {
+        "task_title": "E2E High — Escalate stock discrepancy",
+        "task_details": "Urgent inventory mismatch at loading bay",
+        "task_type": "Specific Action",
+        "priority": "High",
+        "status": "Due",
+        "action_source": "Action Page"
+      }
+    },
+    {
+      "id": "TS-A03",
+      "name": "bucket-idea-before-convert",
+      "purpose": "Capture an idea in bucketlist before converting to action",
+      "uiFlow": "Bucketlist → type title → Enter",
+      "type": "positive",
+      "matrixId": "P-B01",
+      "bucketPayload": {
+        "title": "E2E Bucket — Plan Q3 safety audit",
+        "description": "Captured idea before converting to action",
+        "status": "Pending"
+      }
+    },
+    {
+      "id": "TS-A04",
+      "name": "action-for-progress-update",
+      "purpose": "Update progress and mark action Done",
+      "uiFlow": "API create → detail → Progress → Save / Done",
+      "type": "positive",
+      "matrixId": "P-E03",
+      "apiPayload": {
+        "task_title": "E2E Progress — Update loading schedule",
+        "task_details": "Used for progress and status tests",
+        "task_type": "Specific Action",
+        "priority": "Normal",
+        "status": "Due",
+        "action_source": "Action Page"
+      }
+    },
+    {
+      "id": "TS-A05",
+      "name": "invalid-action-missing-title",
+      "purpose": "UI must block save when title is empty",
+      "uiFlow": "Quick-create → empty title → Create disabled",
+      "type": "negative",
+      "matrixId": "N-C01",
+      "apiPayload": {
+        "task_title": "",
+        "task_details": "Should not be saved",
+        "task_type": "Specific Action"
+      }
+    },
+    {
+      "id": "TS-A06",
+      "name": "routine-daily-action",
+      "purpose": "Create a daily routine action series",
+      "uiFlow": "Bucketlist → Routine → configure recurrence → save",
+      "type": "positive",
+      "matrixId": "P-B04",
+      "apiPayload": {
+        "task_title": "E2E Routine — Daily standup notes",
+        "task_details": "Recurring daily action for team sync",
+        "task_type": "Routine Action",
+        "priority": "Normal",
+        "status": "Due",
+        "action_source": "Action Page"
+      }
+    },
+    {
+      "id": "TS-A07",
+      "name": "action-with-rich-description",
+      "purpose": "Save long description/notes in task_details",
+      "uiFlow": "Quick-create → fill description → save",
+      "type": "positive",
+      "matrixId": "P-C03",
+      "apiPayload": {
+        "task_title": "E2E Notes — Document SOP change",
+        "task_details": "Detailed notes: step 1 audit bins, step 2 update ledger, step 3 notify supervisor.",
+        "task_type": "Specific Action",
+        "priority": "Normal",
+        "status": "Due",
+        "action_source": "Action Page"
+      }
+    },
+    {
+      "id": "TS-A08",
+      "name": "agenda-linked-action",
+      "purpose": "Action linked to agenda context",
+      "uiFlow": "Create action with agenda reference",
+      "type": "positive",
+      "matrixId": "P-C08",
+      "apiPayload": {
+        "task_title": "E2E Agenda — Prepare monthly review",
+        "task_details": "Linked to agenda item for leadership review",
+        "task_type": "Specific Action",
+        "priority": "Normal",
+        "status": "Due",
+        "action_source": "Action Page"
+      }
+    },
+    {
+      "id": "TS-A09",
+      "name": "team-assignment-action",
+      "purpose": "Action assigned to current user as responsible party",
+      "uiFlow": "API create with assignee → verify in detail",
+      "type": "positive",
+      "matrixId": "P-C09",
+      "apiPayload": {
+        "task_title": "E2E Team — Coordinate dispatch",
+        "task_details": "Multi-member coordination test data",
+        "task_type": "Specific Action",
+        "priority": "High",
+        "status": "Due",
+        "action_source": "Action Page"
+      }
+    },
+    {
+      "id": "TS-A10",
+      "name": "lifecycle-delete-cleanup",
+      "purpose": "Create action then delete via API for cleanup validation",
+      "uiFlow": "API create → delete-task → verify gone",
+      "type": "positive",
+      "matrixId": "P-F04",
+      "apiPayload": {
+        "task_title": "E2E Delete — Temporary task",
+        "task_details": "Used for delete lifecycle validation",
+        "task_type": "Specific Action",
+        "priority": "Low",
+        "status": "Due",
+        "action_source": "Action Page"
+      }
+    }
+  ]
+}
