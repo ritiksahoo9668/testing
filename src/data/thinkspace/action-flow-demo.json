@@ -1,20 +1,21 @@
 {
-  "title": "Thinkspace Action Master — demo walkthrough",
+  "title": "Thinkspace Action Master — complete demo walkthrough",
   "moduleLabel": "Thinkspace module",
   "subModuleLabel": "Action Master",
   "route": "/thinkspace/task",
-  "scope": "Action module only (sections A–F, partial G). Agenda (H) is a separate flow.",
+  "scope": "Full Action Master workflow: access, filters, calendar, bucketlist, create, read, update, status, attachments, lifecycle (sections A–G, I). Agenda (H) is a separate demo.",
   "prerequisites": [
     "Tenant URL in E2E_ERP_UI_BASE_URL (nip.io host)",
     "E2E_ERP_USERNAME / E2E_ERP_PASSWORD",
     "User has thinkspace-task license",
-    "Django :8001 + UI :8002 running"
+    "Django :8001 + UI :8002 running",
+    "Optional: E2E_DEMO_PAUSE_MS (default 1200) for headed video pacing"
   ],
   "crudSummary": {
-    "Create": "Bucketlist → Specific quick-create modal → POST tasks/",
-    "Read": "Today/Week list row click → GET tasks/:id/ detail modal",
-    "Update": "Description, progress slider, post update → PATCH / set-task-progress / post-task-update",
-    "Delete": "Detail modal Delete → POST delete-task/ (before Done — Done disables Delete)"
+    "Create": "Bucketlist → Specific/Routine quick-create → POST tasks/",
+    "Read": "Today/Week list, deep link /thinkspace/task/:id, detail tabs",
+    "Update": "Description, progress slider, Do more/Derailed status, post update, attachments",
+    "Delete": "Detail Delete (before Done — Done disables Delete on same record)"
   },
   "steps": [
     {
@@ -24,7 +25,7 @@
       "crud": "Read",
       "title": "Open Actions workspace",
       "userAction": "Navigate to /thinkspace/task (Today view)",
-      "uiLocation": "TaskPage — work mode, view menu",
+      "uiLocation": "TaskPage — work mode, view menu, bucketlist",
       "api": null
     },
     {
@@ -32,95 +33,198 @@
       "section": "A",
       "matrixCases": ["P-A03"],
       "crud": "Read",
-      "title": "Switch work mode to Agenda/Action",
-      "userAction": "Click Agenda/Action in Work mode toggle",
+      "title": "Agenda/Action work mode",
+      "userAction": "Ensure Agenda/Action work mode is active",
       "uiLocation": "WorkModeToggle",
       "api": null
     },
     {
       "order": 3,
-      "section": "G",
-      "matrixCases": ["P-A02", "P-G02"],
+      "section": "D",
+      "matrixCases": ["P-D02"],
       "crud": "Read",
-      "title": "Switch Week view then back to Today",
-      "userAction": "View menu → Week → Today",
+      "title": "Action type filter bar",
+      "userAction": "Show filter bar → select Specific filter",
+      "uiLocation": "ActionTypeFilterBar",
+      "api": null,
+      "note": "Visible in Agenda/Action mode"
+    },
+    {
+      "order": 4,
+      "section": "G",
+      "matrixCases": ["P-A02", "P-G01"],
+      "crud": "Read",
+      "title": "Switch to Week view",
+      "userAction": "View menu → Week",
       "uiLocation": "TaskPage view menu",
       "api": null
     },
     {
-      "order": 4,
-      "section": "B",
-      "matrixCases": ["P-B01"],
-      "crud": "Create",
-      "title": "Bucketlist — capture idea",
-      "userAction": "Open bucketlist FAB → type title → Enter",
-      "uiLocation": "Bucketlist panel",
-      "api": "POST bucket-list/"
-    },
-    {
       "order": 5,
-      "section": "C",
-      "matrixCases": ["P-C01"],
-      "crud": "Create",
-      "title": "Create Specific action from bucket",
-      "userAction": "Click Specific on bucket row → fill quick-create → submit",
-      "uiLocation": "QuickCreateModal",
-      "api": "POST tasks/"
+      "section": "G",
+      "matrixCases": ["P-G02"],
+      "crud": "Read",
+      "title": "Navigate previous and next week",
+      "userAction": "Previous week → Next week",
+      "uiLocation": "Week navigation buttons",
+      "api": null
     },
     {
       "order": 6,
-      "section": "D",
-      "matrixCases": ["P-D01"],
+      "section": "G",
+      "matrixCases": ["P-A02"],
       "crud": "Read",
-      "title": "Open action from Today list",
-      "userAction": "Click action row in main list",
-      "uiLocation": "TaskPage list → /thinkspace/task/:id",
-      "api": "GET tasks/:id/"
+      "title": "Return to Today view",
+      "userAction": "View menu → Actions · Today",
+      "uiLocation": "TaskPage view menu",
+      "api": null
     },
     {
       "order": 7,
-      "section": "E",
-      "matrixCases": ["P-E01"],
+      "section": "B",
+      "matrixCases": ["P-B02"],
       "crud": "Read",
-      "title": "Browse detail modal tabs",
-      "userAction": "Click Progress, Updates, Attachments, Hierarchy tabs",
-      "uiLocation": "TaskDetailModal",
+      "title": "Open bucketlist panel",
+      "userAction": "Click Open bucketlist FAB if panel closed",
+      "uiLocation": "Bucketlist FAB",
       "api": null
     },
     {
       "order": 8,
+      "section": "B",
+      "matrixCases": ["P-B01"],
+      "crud": "Create",
+      "title": "Capture idea in bucketlist",
+      "userAction": "Type title → Enter",
+      "uiLocation": "Bucketlist input",
+      "api": "POST bucket-list/"
+    },
+    {
+      "order": 9,
+      "section": "B",
+      "matrixCases": ["P-B04"],
+      "crud": "Create",
+      "title": "Preview Routine quick-create from bucket",
+      "userAction": "Bucket row → Routine → verify modal → Cancel",
+      "uiLocation": "Bucket row — Routine button",
+      "api": null
+    },
+    {
+      "order": 10,
+      "section": "C",
+      "matrixCases": ["P-C01", "P-B03"],
+      "crud": "Create",
+      "title": "Create Specific action from bucket",
+      "userAction": "Bucket row → Specific → fill form → + Create Action",
+      "uiLocation": "QuickCreateModal",
+      "api": "POST tasks/"
+    },
+    {
+      "order": 11,
+      "section": "A",
+      "matrixCases": ["P-A04"],
+      "crud": "Read",
+      "title": "Deep link to action detail",
+      "userAction": "Navigate to /thinkspace/task/:id",
+      "uiLocation": "TaskDetailModal via URL",
+      "api": "GET tasks/:id/"
+    },
+    {
+      "order": 12,
+      "section": "E",
+      "matrixCases": ["P-E01"],
+      "crud": "Read",
+      "title": "Browse detail modal tabs",
+      "userAction": "Progress → Updates → Attachments → Hierarchy",
+      "uiLocation": "TaskDetailModal tabs",
+      "api": null
+    },
+    {
+      "order": 13,
       "section": "E",
       "matrixCases": ["P-E02", "P-E03"],
       "crud": "Update",
       "title": "Update description and progress",
-      "userAction": "Edit description → Save; set progress 75% → Save",
-      "uiLocation": "Detail modal — description + Progress tab",
+      "userAction": "Edit description → Save; Progress tab → 30% → Save",
+      "uiLocation": "Detail modal",
       "api": "PATCH tasks/:id/, POST set-task-progress/"
     },
     {
-      "order": 9,
+      "order": 14,
+      "section": "F",
+      "matrixCases": ["P-F02"],
+      "crud": "Update",
+      "title": "Status — Do more (with note)",
+      "userAction": "Click Do more → enter required note in prompt",
+      "uiLocation": "Detail modal — Do more button",
+      "api": "POST set-task-progress/"
+    },
+    {
+      "order": 15,
+      "section": "F",
+      "matrixCases": ["P-F03"],
+      "crud": "Update",
+      "title": "Status — Derailed (with note)",
+      "userAction": "Click Derailed → enter required note in prompt",
+      "uiLocation": "Detail modal — Derailed button",
+      "api": "POST set-task-progress/"
+    },
+    {
+      "order": 16,
       "section": "E",
       "matrixCases": ["P-E04"],
       "crud": "Update",
-      "title": "Post progress note",
-      "userAction": "Type update → Post",
-      "uiLocation": "Detail modal — Updates tab",
+      "title": "Post progress update comment",
+      "userAction": "Type update → Post → verify on Updates tab",
+      "uiLocation": "Detail modal — Post input",
       "api": "POST post-task-update/"
     },
     {
-      "order": 10,
+      "order": 17,
+      "section": "I",
+      "matrixCases": ["P-E05", "P-I02"],
+      "crud": "Update",
+      "title": "Upload attachment on action",
+      "userAction": "Attachments tab → choose file → Upload",
+      "uiLocation": "TaskDetailModal — #task-file-input",
+      "api": "POST add-attachment-to-task/"
+    },
+    {
+      "order": 18,
+      "section": "F",
+      "matrixCases": ["P-F01"],
+      "crud": "Update",
+      "title": "Mark separate action as Done",
+      "userAction": "Open second action → Done (modal closes; progress API succeeds)",
+      "uiLocation": "Detail modal — Done button",
+      "api": "POST set-task-progress/",
+      "note": "Uses a second action so primary action can still be deleted in step 19"
+    },
+    {
+      "order": 19,
       "section": "F",
       "matrixCases": ["P-F04", "P-F05"],
       "crud": "Delete",
-      "title": "Delete action",
-      "userAction": "Click Delete in detail modal",
+      "title": "Delete primary demo action",
+      "userAction": "Click Delete on main action (not Done)",
       "uiLocation": "TaskDetailModal — Delete button",
-      "api": "POST delete-task/",
-      "note": "Run Delete before Done — Done marks complete and disables Delete"
+      "api": "POST delete-task/"
+    },
+    {
+      "order": 20,
+      "section": "B",
+      "matrixCases": ["P-B06"],
+      "crud": "Delete",
+      "title": "Remove leftover bucket item (if any)",
+      "userAction": "Click ✕ on bucket row",
+      "uiLocation": "Bucketlist row",
+      "api": "DELETE bucket-list/:id/",
+      "note": "Optional cleanup when bucket item was not consumed by create"
     }
   ],
   "excludedFromActionDemo": {
-    "sectionH": "Create agenda — use tests/thinkspace/workflow/08-create-agenda.ui.spec.ts",
-    "markDone": "P-F01 Mark Done — separate lifecycle; conflicts with Delete on same record"
+    "sectionH": "Create agenda — use tests/thinkspace/workflow/08-create-agenda.ui.spec.ts or npm run demo:thinkspace-agenda when available",
+    "actionPool": "ERP admin Action pool / Timesheet views — admin-only",
+    "listFilters": "Search/Status/Priority/Source panel — toggled via showActionFilters (not default visible)"
   }
 }

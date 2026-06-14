@@ -376,4 +376,4 @@ Sign in (tenant URL)
   → Delete
 ```
 
-**Automated equivalent:** `npm run demo:thinkspace-action` or WF-LIFE-03 in `06-lifecycle.ui.spec.ts`.
+**Automated equivalent:** `npm run demo:thinkspace-action` (20-step full workflow video) or WF-LIFE-03 in `06-lifecycle.ui.spec.ts`.

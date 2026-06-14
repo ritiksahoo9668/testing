@@ -72,6 +72,7 @@ const envSchema = z.object({
   E2E_PERF_NAVIGATION_MS: z.coerce.number().positive().default(5_000),
   E2E_PERF_API_MS: z.coerce.number().positive().default(3_000),
   E2E_KEEP_TEST_DATA: booleanFromEnv.default(false),
+  E2E_DEMO_PAUSE_MS: z.coerce.number().nonnegative().default(0),
 });
 
 const parsed = envSchema.safeParse(process.env);

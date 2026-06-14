@@ -41,6 +41,9 @@ process.env.E2E_HEADLESS = 'false';
 if (!process.env.E2E_SLOW_MO || process.env.E2E_SLOW_MO === '0') {
   process.env.E2E_SLOW_MO = '400';
 }
+if (!process.env.E2E_DEMO_PAUSE_MS) {
+  process.env.E2E_DEMO_PAUSE_MS = '1200';
+}
 
 const flowPath = resolve(rootDir, 'src/data/thinkspace/action-flow-demo.json');
 let flowSteps = [];

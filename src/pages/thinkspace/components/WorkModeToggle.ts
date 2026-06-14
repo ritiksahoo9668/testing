@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { BaseComponent } from '../../../core/BaseComponent.js';
 
 export class WorkModeToggle extends BaseComponent {
@@ -16,6 +17,10 @@ export class WorkModeToggle extends BaseComponent {
 
   async clickAgendaAction(): Promise<void> {
     await this.agendaActionButton.click();
+  }
+
+  async expectAgendaActionActive(): Promise<void> {
+    await expect(this.agendaActionButton).toHaveClass(/is-active/);
   }
 }
 

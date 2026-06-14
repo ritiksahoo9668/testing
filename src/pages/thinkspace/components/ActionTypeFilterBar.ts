@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { BaseComponent } from '../../../core/BaseComponent.js';
 
 export class ActionTypeFilterBar extends BaseComponent {
@@ -7,15 +8,25 @@ export class ActionTypeFilterBar extends BaseComponent {
   }
 
   async expectVisible(): Promise<void> {
-    try {
-      await this.root.waitFor({ state: 'visible', timeout: 5_000 });
-    } catch {
-      // Filter bar appears in agenda work mode; not always visible on first load.
-    }
+    await expect(this.root).toBeVisible({ timeout: 15_000 });
+  }
+
+  async isVisible(): Promise<boolean> {
+    return this.root.isVisible().catch(() => false);
   }
 
   async selectFilter(label: string | RegExp): Promise<void> {
     await this.root.getByRole('button', { name: label }).click();
+  }
+
+  /** Select a filter when the bar is shown (Agenda/Action work mode). No-op if hidden. */
+  async selectFilterIfVisible(label: string | RegExp): Promise<void> {
+    if (!(await this.isVisible())) return;
+    await this.selectFilter(label);
+  }
+
+  async expectFilterOption(label: string | RegExp): Promise<void> {
+    await expect(this.root.getByRole('button', { name: label })).toBeVisible();
   }
 }
 

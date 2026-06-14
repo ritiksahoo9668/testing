@@ -64,15 +64,25 @@ Command: `npm run demo:thinkspace-action`
 | Step | Demo action | Matrix case(s) | CRUD |
 |------|-------------|----------------|------|
 | 1 | Open `/thinkspace/task` | P-A01 | Read |
-| 2 | Work mode → Agenda/Action | P-A03 | Read |
-| 3 | Week → Today | P-A02, P-G02 | Read |
-| 4 | Bucketlist add item | P-B01 | Create |
-| 5 | Specific quick-create | P-C01 | Create |
-| 6 | Open from list | P-D01 | Read |
-| 7 | Tabs: Progress, Updates, Attachments, Hierarchy | P-E01 | Read |
-| 8 | Update description + 75% progress | P-E02, P-E03 | Update |
-| 9 | Post progress note | P-E04 | Update |
-| 10 | Delete action | P-F04, P-F05 | Delete |
+| 2 | Work mode → Agenda/Action (active) | P-A03 | Read |
+| 3 | Action type filter → Specific | P-D02 | Read |
+| 4 | View menu → Week | P-A02, P-G01 | Read |
+| 5 | Previous week → Next week | P-G02 | Read |
+| 6 | View menu → Today | P-A02 | Read |
+| 7 | Open bucketlist FAB | P-B02 | Read |
+| 8 | Bucketlist add item | P-B01 | Create |
+| 9 | Routine preview → Cancel | P-B04 | Create |
+| 10 | Specific quick-create | P-C01, P-B03 | Create |
+| 11 | Deep link `/thinkspace/task/:id` | P-A04 | Read |
+| 12 | Tabs: Progress, Updates, Attachments, Hierarchy | P-E01 | Read |
+| 13 | Update description + 30% progress | P-E02, P-E03 | Update |
+| 14 | Do more (with note prompt) | P-F02 | Update |
+| 15 | Derailed (with note prompt) | P-F03 | Update |
+| 16 | Post progress note | P-E04 | Update |
+| 17 | Upload attachment | P-E05, P-I02 | Update |
+| 18 | Second action → Done → verify 100% | P-F01 | Update |
+| 19 | Delete primary action | P-F04, P-F05 | Delete |
+| 20 | Cleanup leftover bucket item | P-B06 | Delete |
 
 **Not in Action demo video (separate specs):**
 

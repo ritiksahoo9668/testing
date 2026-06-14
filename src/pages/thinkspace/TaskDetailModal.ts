@@ -11,6 +11,8 @@ export class TaskDetailModal extends BasePage {
   readonly progressSlider = this.modalShell.locator('input[type="range"]');
   readonly saveProgressButton = this.modalShell.getByRole('button', { name: 'Save', exact: true });
   readonly doneButton = this.modalShell.getByRole('button', { name: 'Done', exact: true });
+  readonly doMoreButton = this.modalShell.getByRole('button', { name: 'Do more', exact: true });
+  readonly derailedButton = this.modalShell.getByRole('button', { name: 'Derailed', exact: true });
   readonly deleteButton = this.modalShell.getByRole('button', { name: 'Delete', exact: true });
   readonly descriptionInput = this.modalShell.getByPlaceholder('Task description...');
   readonly saveDescriptionButton = this.modalShell.locator('button[title="Save Description"]');
@@ -80,8 +82,41 @@ export class TaskDetailModal extends BasePage {
 
   async markDone(): Promise<void> {
     await this.selectTab('Progress');
+    const responsePromise = this.page
+      .waitForResponse(
+        (res) => res.url().includes('set-task-progress') && res.request().method() === 'POST',
+        { timeout: 30_000 },
+      )
+      .catch(() => null);
     await this.doneButton.click();
+    await responsePromise;
     await waitForSpinnerToDisappear(this.page);
+  }
+
+  private registerPromptAccept(note: string): void {
+    this.page.once('dialog', async (dialog) => {
+      await dialog.accept(note);
+    });
+  }
+
+  async clickDoMore(note: string): Promise<void> {
+    this.registerPromptAccept(note);
+    await this.doMoreButton.click();
+    await waitForSpinnerToDisappear(this.page);
+  }
+
+  async clickDerailed(note: string): Promise<void> {
+    this.registerPromptAccept(note);
+    await this.derailedButton.click();
+    await waitForSpinnerToDisappear(this.page);
+  }
+
+  async expectDeleteDisabled(): Promise<void> {
+    await expect(this.deleteButton).toBeDisabled();
+  }
+
+  async expectDeleteEnabled(): Promise<void> {
+    await expect(this.deleteButton).toBeEnabled();
   }
 
   async postUpdate(message: string): Promise<void> {

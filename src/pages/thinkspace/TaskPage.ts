@@ -37,6 +37,28 @@ export class TaskPage extends BasePage {
     await waitForSpinnerToDisappear(this.page);
   }
 
+  async navigatePreviousWeek(): Promise<void> {
+    await this.page.getByLabel('Previous week').click();
+    await waitForSpinnerToDisappear(this.page);
+  }
+
+  async navigateNextWeek(): Promise<void> {
+    await this.page.getByLabel('Next week').click();
+    await waitForSpinnerToDisappear(this.page);
+  }
+
+  async expectWeekNavigationVisible(): Promise<void> {
+    await expect(this.page.getByLabel('Previous week')).toBeVisible();
+    await expect(this.page.getByLabel('Next week')).toBeVisible();
+  }
+
+  async openRoutineQuickCreateFromBucket(title: string): Promise<void> {
+    await this.switchBucketCategory('action');
+    await this.addBucketItem(title);
+    await this.bucketRow(title).getByRole('button', { name: 'Routine', exact: true }).click();
+    await this.quickCreate.expectOpen();
+  }
+
   async ensureBucketlistOpen(): Promise<void> {
     const closeBtn = this.page.getByRole('button', { name: 'Close bucketlist' });
     if (!(await closeBtn.isVisible().catch(() => false))) {
