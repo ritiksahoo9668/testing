@@ -1,0 +1,401 @@
+{
+  "title": "Thinkspace Thought — complete demo walkthrough",
+  "moduleLabel": "Thinkspace module",
+  "subModuleLabel": "Thought",
+  "route": "/thinkspace/thought",
+  "scope": "Full Thought workflow: list access, create meeting, return to list and Open workspace, canvas context menu (child/parent/sibling/edit/delete), comments and actions from canvas and logs panel, materials upload/preview/edit/delete, export, AI summary, analytics, RSVP, list log modals, cleanup (sections A–H).",
+  "prerequisites": [
+    "Tenant URL in E2E_ERP_UI_BASE_URL (nip.io host)",
+    "E2E_ERP_USERNAME / E2E_ERP_PASSWORD",
+    "User has thinkspace-thought license",
+    "Django :8001 + UI :8002 running",
+    "Optional: E2E_DEMO_PAUSE_MS (default 1200) for headed video pacing"
+  ],
+  "crudSummary": {
+    "Create": "Create meeting → Open workspace → canvas nodes (child/parent/sibling) → comments → actions (canvas + logs) → materials upload",
+    "Read": "List, Open link, search, logs modals, dock panels, material preview, analytics, export",
+    "Update": "Node labels, comments, RSVP, undo/redo, material edit preview, contributors panel",
+    "Delete": "Canvas node delete, material delete, meeting cleanup via API"
+  },
+  "steps": [
+    {
+      "order": 1,
+      "section": "A",
+      "matrixCases": ["P-TH01"],
+      "crud": "Read",
+      "title": "Open Meeting Notes list",
+      "userAction": "Navigate to /thinkspace/thought",
+      "uiLocation": "ThoughtListPage — header, search, Create meeting",
+      "api": null
+    },
+    {
+      "order": 2,
+      "section": "A",
+      "matrixCases": ["P-TH02"],
+      "crud": "Read",
+      "title": "Preview Meeting intelligence",
+      "userAction": "Intelligence link → verify stats → back to list",
+      "uiLocation": "ThoughtAnalyticsPage",
+      "api": "GET thought/analytics/dashboard/"
+    },
+    {
+      "order": 3,
+      "section": "H",
+      "matrixCases": ["N-TH02"],
+      "crud": "Create",
+      "title": "Create modal — empty title guard",
+      "userAction": "Open Create → verify required title blocks submit",
+      "uiLocation": "CreateMeetingForm",
+      "api": null
+    },
+    {
+      "order": 4,
+      "section": "B",
+      "matrixCases": ["P-TH03"],
+      "crud": "Create",
+      "title": "Create modal — meeting title",
+      "userAction": "Open Create meeting → fill Meeting title",
+      "uiLocation": "CreateMeetingForm — input.thought-create-form__input",
+      "api": null
+    },
+    {
+      "order": 5,
+      "section": "B",
+      "matrixCases": ["P-TH04"],
+      "crud": "Create",
+      "title": "Set meeting date",
+      "userAction": "Fill datetime-local date field",
+      "uiLocation": "CreateMeetingForm — input.thought-create-form__input--date",
+      "api": null
+    },
+    {
+      "order": 6,
+      "section": "B",
+      "matrixCases": ["P-TH29"],
+      "crud": "Create",
+      "title": "Add contributor from directory",
+      "userAction": "Search people combobox → pick from listbox",
+      "uiLocation": "ContributorSearchSelect — combobox + listbox",
+      "api": "GET thought/users/search/"
+    },
+    {
+      "order": 7,
+      "section": "B",
+      "matrixCases": ["P-TH30"],
+      "crud": "Update",
+      "title": "Set contributor access Editor",
+      "userAction": "Contributor chip → access select → Editor",
+      "uiLocation": "AttendeePicker — select[aria-label^=\"Access for\"]",
+      "api": null
+    },
+    {
+      "order": 8,
+      "section": "B",
+      "matrixCases": ["P-TH31"],
+      "crud": "Create",
+      "title": "Add guest contributor",
+      "userAction": "Guest name + Email → Guest button",
+      "uiLocation": "AttendeePicker — Guest form",
+      "api": null
+    },
+    {
+      "order": 9,
+      "section": "B",
+      "matrixCases": ["P-TH04"],
+      "crud": "Create",
+      "title": "Agenda, submit, return to list",
+      "userAction": "Fill agenda → Create meeting → verify workspace → navigate back to Meeting Notes list",
+      "uiLocation": "CreateMeetingForm → ThoughtListPage",
+      "api": "POST thought/meetings/create/"
+    },
+    {
+      "order": 10,
+      "section": "C",
+      "matrixCases": ["P-TH06"],
+      "crud": "Read",
+      "title": "Open workspace from meeting card",
+      "userAction": "Search meeting card → click Open (Open Workspace link)",
+      "uiLocation": "ThoughtListPage — article.thought-card → a[title=\"Open Workspace\"]",
+      "api": "GET thought/meeting-notes/:id/"
+    },
+    {
+      "order": 11,
+      "section": "D",
+      "matrixCases": ["P-TH16"],
+      "crud": "Read",
+      "title": "Dock panels — Canvas, Logs, AI",
+      "userAction": "Cycle dock: Canvas → Comment & Action Logs → AI Summary → Canvas",
+      "uiLocation": "LeftDock — aria-label dock tools",
+      "api": null
+    },
+    {
+      "order": 12,
+      "section": "D",
+      "matrixCases": ["P-TH11"],
+      "crud": "Update",
+      "title": "Central node — context menu and create child",
+      "userAction": "Right-click central → verify menu → Create child node",
+      "uiLocation": "NodeContextMenu on central node",
+      "api": "PATCH thought/meeting-notes/:id/"
+    },
+    {
+      "order": 13,
+      "section": "E",
+      "matrixCases": ["P-TH18"],
+      "crud": "Update",
+      "title": "Child node — add comment",
+      "userAction": "Context menu → Add comment → Save",
+      "uiLocation": "NodeCommentCloud",
+      "api": null
+    },
+    {
+      "order": 14,
+      "section": "D",
+      "matrixCases": ["P-TH11"],
+      "crud": "Update",
+      "title": "Child node — create nested child",
+      "userAction": "Context menu → Create child node on child",
+      "uiLocation": "NodeContextMenu on child node",
+      "api": "PATCH thought/meeting-notes/:id/"
+    },
+    {
+      "order": 15,
+      "section": "D",
+      "matrixCases": ["P-TH12"],
+      "crud": "Update",
+      "title": "Child node — edit label",
+      "userAction": "Context menu → Edit label → type new label",
+      "uiLocation": "NodeContextMenu + inline editor",
+      "api": "PATCH thought/meeting-notes/:id/"
+    },
+    {
+      "order": 16,
+      "section": "D",
+      "matrixCases": ["P-TH11"],
+      "crud": "Update",
+      "title": "Labeled node — create parent",
+      "userAction": "Context menu → Create parent node",
+      "uiLocation": "NodeContextMenu on labeled child node",
+      "api": "PATCH thought/meeting-notes/:id/"
+    },
+    {
+      "order": 17,
+      "section": "D",
+      "matrixCases": ["P-TH12"],
+      "crud": "Update",
+      "title": "Labeled node — create sibling",
+      "userAction": "Context menu → Create sibling node",
+      "uiLocation": "NodeContextMenu on labeled child node",
+      "api": "PATCH thought/meeting-notes/:id/"
+    },
+    {
+      "order": 18,
+      "section": "D",
+      "matrixCases": ["P-TH13", "P-TH15"],
+      "crud": "Update",
+      "title": "Canvas — undo/redo and zoom",
+      "userAction": "Undo → Redo → Zoom in/out → Fit canvas",
+      "uiLocation": "LeftDock + zoom pill",
+      "api": null
+    },
+    {
+      "order": 19,
+      "section": "D",
+      "matrixCases": ["P-TH14", "P-TH17"],
+      "crud": "Read",
+      "title": "Node search and contributors",
+      "userAction": "Search nodes → open Manage contributors panel",
+      "uiLocation": "Workspace header",
+      "api": null
+    },
+    {
+      "order": 20,
+      "section": "H",
+      "matrixCases": ["N-TH03"],
+      "crud": "Create",
+      "title": "Create action — assignee validation",
+      "userAction": "Create action modal → submit without assignee → error",
+      "uiLocation": "CreateActionModal",
+      "api": null
+    },
+    {
+      "order": 21,
+      "section": "E",
+      "matrixCases": ["P-TH19"],
+      "crud": "Create",
+      "title": "Create action from context menu",
+      "userAction": "Context menu → Create action → select assignee → Create Action",
+      "uiLocation": "CreateActionModal",
+      "api": "POST thinkspace/tasks/"
+    },
+    {
+      "order": 22,
+      "section": "E",
+      "matrixCases": ["P-TH21"],
+      "crud": "Read",
+      "title": "Comments log — expand metadata and view on canvas",
+      "userAction": "Comments tab → expand → verify COMMENT/Added by/Tagged/When → View on canvas",
+      "uiLocation": "DecisionActionLogsPanel — CommentExpandItem",
+      "api": null
+    },
+    {
+      "order": 23,
+      "section": "E",
+      "matrixCases": ["P-TH20"],
+      "crud": "Create",
+      "title": "Comments log — Create Action from comment",
+      "userAction": "Expanded comment → Create Action button → submit",
+      "uiLocation": "thought-comment-create-action-btn",
+      "api": "POST thinkspace/tasks/"
+    },
+    {
+      "order": 24,
+      "section": "E",
+      "matrixCases": ["P-TH20"],
+      "crud": "Read",
+      "title": "Actions log — expand action details",
+      "userAction": "Actions tab → expand first action → verify Owners",
+      "uiLocation": "DecisionActionLogsPanel — ActionExpandItem",
+      "api": null
+    },
+    {
+      "order": 25,
+      "section": "F",
+      "matrixCases": ["P-TH22"],
+      "crud": "Read",
+      "title": "Materials tab — open upload modal",
+      "userAction": "Materials tab (count 0) → Add meeting material → DocFlow + Upload options",
+      "uiLocation": "thought-logs-toggle__btn--materials + Modal",
+      "api": null
+    },
+    {
+      "order": 26,
+      "section": "F",
+      "matrixCases": ["P-TH22"],
+      "crud": "Create",
+      "title": "Upload meeting material (JSON .txt)",
+      "userAction": "Materials tab → Add meeting material → Upload new file",
+      "uiLocation": "MeetingMaterialsPanel + Modal",
+      "api": "POST thought/upload-file/"
+    },
+    {
+      "order": 27,
+      "section": "F",
+      "matrixCases": ["P-TH22"],
+      "crud": "Read",
+      "title": "Material preview, select file, edit mode",
+      "userAction": "Select file in list → Preview Mode → Edit File → Cancel",
+      "uiLocation": "MeetingFilePreview + thought-materials-files",
+      "api": null
+    },
+    {
+      "order": 28,
+      "section": "F",
+      "matrixCases": ["P-TH28"],
+      "crud": "Delete",
+      "title": "Delete meeting material",
+      "userAction": "Materials toolbar → Delete → confirm",
+      "uiLocation": "MeetingMaterialsPanel — trash button",
+      "api": "POST thought/delete-attachment/"
+    },
+    {
+      "order": 29,
+      "section": "D",
+      "matrixCases": ["P-TH12"],
+      "crud": "Delete",
+      "title": "Delete canvas sibling node",
+      "userAction": "Context menu → Delete → confirm",
+      "uiLocation": "NodeContextMenu",
+      "api": "PATCH thought/meeting-notes/:id/"
+    },
+    {
+      "order": 30,
+      "section": "F",
+      "matrixCases": ["P-TH23"],
+      "crud": "Read",
+      "title": "Export JSON",
+      "userAction": "Export menu → Export as JSON",
+      "uiLocation": "ThoughtExportMenu",
+      "api": null
+    },
+    {
+      "order": 31,
+      "section": "F",
+      "matrixCases": ["P-TH24"],
+      "crud": "Read",
+      "title": "AI Summary panel",
+      "userAction": "Dock → AI Summary → verify live summary",
+      "uiLocation": "SmartPanel — AI Summary",
+      "api": null
+    },
+    {
+      "order": 32,
+      "section": "D",
+      "matrixCases": ["P-TH27"],
+      "crud": "Read",
+      "title": "Back to Actions & agendas",
+      "userAction": "Click Actions & agendas → /thinkspace/task",
+      "uiLocation": "Workspace header back link",
+      "api": null
+    },
+    {
+      "order": 33,
+      "section": "C",
+      "matrixCases": ["P-TH06", "P-TH07"],
+      "crud": "Read",
+      "title": "List search and RSVP",
+      "userAction": "Return to list → search meeting → set RSVP accepted",
+      "uiLocation": "ThoughtListPage cards",
+      "api": "POST thought/meetings/:id/rsvp"
+    },
+    {
+      "order": 34,
+      "section": "C",
+      "matrixCases": ["P-TH08", "P-TH09"],
+      "crud": "Read",
+      "title": "List log modals",
+      "userAction": "Action Logs modal → Comments modal",
+      "uiLocation": "List card buttons",
+      "api": "GET thought/meeting-notes/:id/"
+    },
+    {
+      "order": 35,
+      "section": "G",
+      "matrixCases": ["P-TH25", "P-TH26"],
+      "crud": "Read",
+      "title": "Analytics global search",
+      "userAction": "Intelligence → run global search",
+      "uiLocation": "ThoughtAnalyticsPage",
+      "api": "GET thought/search/"
+    },
+    {
+      "order": 36,
+      "section": "B",
+      "matrixCases": ["P-TH05"],
+      "crud": "Create",
+      "title": "Cancel create preview",
+      "userAction": "Create meeting modal → Cancel (no navigation)",
+      "uiLocation": "CreateMeetingForm — Cancel",
+      "api": null
+    },
+    {
+      "order": 37,
+      "section": "F",
+      "matrixCases": ["P-TH28"],
+      "crud": "Delete",
+      "title": "Delete demo meeting (API cleanup)",
+      "userAction": "Delete meeting via API after demo",
+      "uiLocation": "API cleanup",
+      "api": "POST thought/meetings/delete/",
+      "note": "No delete-meeting UI — cleanup via ThoughtApi"
+    }
+  ],
+  "excludedFromThoughtDemo": {
+    "videoCall": "LiveKit call lobby — requires media permissions; test separately",
+    "guestJoin": "Guest OTP flow at /thinkspace/thought/guest/join — separate spec",
+    "multiUserCollab": "WebSocket presence/cursors — requires two sessions",
+    "enterprisePanels": "Agenda/polls/recording in lobby — enterprisePanelsOpen not wired in workspace header",
+    "docflowLink": "DocFlow material link — requires DocFlow data",
+    "aiEnhance": "Enhance with AI / publish minutes — optional; may call external AI"
+  }
+}

@@ -8,6 +8,7 @@ export type ThinkspaceHelpers = {
   userId: number;
   createdTaskIds: number[];
   createdProjectIds: number[];
+  createdMeetingIds: string[];
   createdBucketIds: number[];
   createdAgendaIds: number[];
   createTestTask: (overrides?: Parameters<typeof buildSpecificTaskPayload>[1]) => Promise<number>;
@@ -18,6 +19,7 @@ export const thinkspaceTest = base.extend<{ thinkspace: ThinkspaceHelpers }>({
   thinkspace: async ({ thinkspaceTaskApi, thinkspaceAgendaApi }, use) => {
     const createdTaskIds: number[] = [];
     const createdProjectIds: number[] = [];
+    const createdMeetingIds: string[] = [];
     const createdBucketIds: number[] = [];
     const createdAgendaIds: number[] = [];
     const userId = await thinkspaceTaskApi.getCurrentUserId();
@@ -26,6 +28,7 @@ export const thinkspaceTest = base.extend<{ thinkspace: ThinkspaceHelpers }>({
       userId,
       createdTaskIds,
       createdProjectIds,
+      createdMeetingIds,
       createdBucketIds,
       createdAgendaIds,
       async createTestTask(overrides) {
@@ -64,6 +67,7 @@ export const thinkspaceTest = base.extend<{ thinkspace: ThinkspaceHelpers }>({
         }
         createdTaskIds.length = 0;
         createdProjectIds.length = 0;
+        createdMeetingIds.length = 0;
         createdBucketIds.length = 0;
         createdAgendaIds.length = 0;
       },

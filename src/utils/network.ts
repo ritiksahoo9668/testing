@@ -50,10 +50,17 @@ export class NetworkMonitor {
 
 export async function parseJsonResponse<T = unknown>(response: APIResponse): Promise<T> {
   const text = await response.text();
+  const status = response.status();
   try {
     return JSON.parse(text) as T;
   } catch {
-    throw new Error(`Expected JSON response but received: ${text.slice(0, 200)}`);
+    if (status === 502 || status === 504) {
+      throw new Error(
+        `API returned HTTP ${status} with empty/non-JSON body. ` +
+          'Is Django running on 127.0.0.1:8001? (cd enterpriseplatform; .\\.venv\\Scripts\\python.exe manage.py runserver 127.0.0.1:8001)',
+      );
+    }
+    throw new Error(`Expected JSON response (HTTP ${status}) but received: ${text.slice(0, 200) || '(empty body)'}`);
   }
 }
 

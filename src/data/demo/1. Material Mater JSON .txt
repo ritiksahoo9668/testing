@@ -1,0 +1,11 @@
+{
+  "material_type": "ZRAW",
+  "item_name": "GI UNION SOCKET-1/2 INCH",
+  "UOM": "NOS",
+  "plant": "1201",
+  "stock_yard": "1201",
+  "division": "DRI",
+  "material_group": "DEMO-GRP",
+  "quantity": 10,
+  "remarks": "Thinkspace Thought demo material upload"
+}

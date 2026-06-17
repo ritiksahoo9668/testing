@@ -1,0 +1,2 @@
+Maithan ERP — Thinkspace Thought demo attachment.
+Used by Playwright materials upload workflow tests.
