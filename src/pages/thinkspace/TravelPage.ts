@@ -7,9 +7,15 @@ import type { TravelCreateFormData } from '../../data/thinkspace/travel-factory.
 export class TravelPage extends BasePage {
   readonly pageTitle = this.page.getByRole('heading', { name: 'Travel Desk' });
   readonly newRequestButton = this.page.getByRole('button', { name: 'New request' }).first();
-  readonly cancelFormButton = this.page.getByRole('button', { name: 'Cancel' });
-  readonly saveDraftButton = this.page.getByRole('button', { name: 'Save draft' });
-  readonly submitForApprovalButton = this.page.getByRole('button', { name: 'Submit for Approval' });
+  readonly cancelFormButton = this.page
+    .locator('form.travel-form-card__body')
+    .getByRole('button', { name: 'Cancel' });
+  readonly saveDraftButton = this.page
+    .locator('form.travel-form-card__body')
+    .getByRole('button', { name: 'Save draft' });
+  readonly submitForApprovalButton = this.page
+    .locator('form.travel-form-card__body')
+    .getByRole('button', { name: 'Submit for Approval' });
   readonly backLink = this.page.getByRole('link', { name: 'Back' });
   readonly emptyState = this.page.getByText('No travel requests yet', { exact: true });
 
@@ -51,7 +57,8 @@ export class TravelPage extends BasePage {
   }
 
   fieldByLabel(label: string): Locator {
-    return this.createForm.getByLabel(label, { exact: true }).first();
+    // Required fields append "*" in the label; match prefix only.
+    return this.createForm.getByLabel(new RegExp(`^${label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`)).first();
   }
 
   async fillCreateForm(data: TravelCreateFormData): Promise<void> {
@@ -76,7 +83,7 @@ export class TravelPage extends BasePage {
   }
 
   async clickSaveDraftWithoutValidation(): Promise<void> {
-    await this.saveDraftButton.click();
+    await expect(this.saveDraftButton).toBeDisabled();
   }
 
   async expectRowVisible(title: string): Promise<void> {

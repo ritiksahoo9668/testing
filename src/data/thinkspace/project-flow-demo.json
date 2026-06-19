@@ -3,7 +3,7 @@
   "moduleLabel": "Thinkspace module",
   "subModuleLabel": "Projects",
   "route": "/thinkspace/projects",
-  "scope": "Full Projects workflow: access, bulk import UI, create draft, statutory approvals, action items, detail tabs (overview, milestones, gantt, comments, actions), edit, submit paths (Compliance, Finance, Under Review), Tasks link, delete, validation preview (sections A–G).",
+  "scope": "Full Projects workflow: hub navigation, access, bulk import UI, create draft, statutory approvals, action items, detail tabs (overview, milestones, gantt, comments, actions), edit, submit paths (Compliance, Finance, Under Review), Tasks link, delete, validation preview, return to hub (sections A–G).",
   "prerequisites": [
     "Tenant URL in E2E_ERP_UI_BASE_URL (nip.io host)",
     "E2E_ERP_USERNAME / E2E_ERP_PASSWORD",
@@ -23,13 +23,23 @@
       "section": "A",
       "matrixCases": ["P-PR01"],
       "crud": "Read",
-      "title": "Open Projects workspace",
-      "userAction": "Navigate to /thinkspace/projects",
-      "uiLocation": "ProjectsPage — header, Create, Recent list",
+      "title": "Open Thinkspace hub",
+      "userAction": "Navigate to /thinkspace",
+      "uiLocation": "ThinkspaceHubPage — hub heading, dock hint",
       "api": null
     },
     {
       "order": 2,
+      "section": "A",
+      "matrixCases": ["P-PR01"],
+      "crud": "Read",
+      "title": "Open Projects from dock launcher",
+      "userAction": "Dock → Thinkspace launcher → Projects tile",
+      "uiLocation": "ShellDockAppLauncher — Projects link",
+      "api": null
+    },
+    {
+      "order": 3,
       "section": "A",
       "matrixCases": ["P-PR01"],
       "crud": "Read",
@@ -39,7 +49,7 @@
       "api": "GET projects/"
     },
     {
-      "order": 3,
+      "order": 4,
       "section": "A",
       "matrixCases": ["P-PR01"],
       "crud": "Read",
@@ -50,7 +60,7 @@
       "note": "Does not run import in demo — UI walkthrough only"
     },
     {
-      "order": 4,
+      "order": 5,
       "section": "G",
       "matrixCases": ["N-PR02"],
       "crud": "Create",
@@ -60,7 +70,7 @@
       "api": null
     },
     {
-      "order": 5,
+      "order": 6,
       "section": "B",
       "matrixCases": ["P-PR02"],
       "crud": "Create",
@@ -70,7 +80,7 @@
       "api": null
     },
     {
-      "order": 6,
+      "order": 7,
       "section": "D",
       "matrixCases": ["P-PR06", "P-PR05"],
       "crud": "Create",
@@ -80,7 +90,7 @@
       "api": null
     },
     {
-      "order": 7,
+      "order": 8,
       "section": "G",
       "matrixCases": ["N-PR03"],
       "crud": "Create",
@@ -90,7 +100,7 @@
       "api": null
     },
     {
-      "order": 8,
+      "order": 9,
       "section": "E",
       "matrixCases": ["P-PR07"],
       "crud": "Create",
@@ -100,7 +110,7 @@
       "api": null
     },
     {
-      "order": 9,
+      "order": 10,
       "section": "E",
       "matrixCases": ["P-PR07"],
       "crud": "Update",
@@ -110,7 +120,7 @@
       "api": null
     },
     {
-      "order": 10,
+      "order": 11,
       "section": "B",
       "matrixCases": ["P-PR02"],
       "crud": "Create",
@@ -120,7 +130,7 @@
       "api": "POST projects/"
     },
     {
-      "order": 11,
+      "order": 12,
       "section": "F",
       "matrixCases": ["P-PR09", "P-PR06"],
       "crud": "Read",
@@ -130,7 +140,7 @@
       "api": "GET projects/:id/"
     },
     {
-      "order": 12,
+      "order": 13,
       "section": "F",
       "matrixCases": ["P-PR13"],
       "crud": "Create",
@@ -140,7 +150,7 @@
       "api": "POST projects/milestones/"
     },
     {
-      "order": 13,
+      "order": 14,
       "section": "F",
       "matrixCases": ["P-PR09"],
       "crud": "Read",
@@ -150,7 +160,7 @@
       "api": null
     },
     {
-      "order": 14,
+      "order": 15,
       "section": "F",
       "matrixCases": ["P-PR14"],
       "crud": "Update",
@@ -160,7 +170,7 @@
       "api": null
     },
     {
-      "order": 15,
+      "order": 16,
       "section": "F",
       "matrixCases": ["P-PR09"],
       "crud": "Read",
@@ -170,7 +180,7 @@
       "api": null
     },
     {
-      "order": 16,
+      "order": 17,
       "section": "F",
       "matrixCases": ["P-PR10"],
       "crud": "Update",
@@ -180,7 +190,7 @@
       "api": "PATCH projects/:id/"
     },
     {
-      "order": 17,
+      "order": 18,
       "section": "C",
       "matrixCases": ["P-PR05", "P-PR12"],
       "crud": "Update",
@@ -190,7 +200,7 @@
       "api": "PATCH projects/:id/"
     },
     {
-      "order": 18,
+      "order": 19,
       "section": "E",
       "matrixCases": ["P-PR08"],
       "crud": "Read",
@@ -200,7 +210,7 @@
       "api": "GET tasks/"
     },
     {
-      "order": 19,
+      "order": 20,
       "section": "F",
       "matrixCases": ["P-PR09"],
       "crud": "Read",
@@ -210,7 +220,7 @@
       "api": null
     },
     {
-      "order": 20,
+      "order": 21,
       "section": "C",
       "matrixCases": ["P-PR04"],
       "crud": "Create",
@@ -220,7 +230,7 @@
       "api": "POST projects/"
     },
     {
-      "order": 21,
+      "order": 22,
       "section": "C",
       "matrixCases": ["P-PR03"],
       "crud": "Create",
@@ -230,7 +240,7 @@
       "api": "POST projects/"
     },
     {
-      "order": 22,
+      "order": 23,
       "section": "C",
       "matrixCases": ["P-PR12"],
       "crud": "Read",
@@ -240,7 +250,7 @@
       "api": null
     },
     {
-      "order": 23,
+      "order": 24,
       "section": "G",
       "matrixCases": ["N-PR04"],
       "crud": "Create",
@@ -250,7 +260,7 @@
       "api": null
     },
     {
-      "order": 24,
+      "order": 25,
       "section": "F",
       "matrixCases": ["P-PR11", "N-PR05"],
       "crud": "Delete",
@@ -258,6 +268,17 @@
       "userAction": "Delete all three demo projects with confirm",
       "uiLocation": "List card — Delete",
       "api": "DELETE projects/:id/"
+    },
+    {
+      "order": 26,
+      "section": "A",
+      "matrixCases": ["P-PR01"],
+      "crud": "Read",
+      "title": "Return to Thinkspace hub",
+      "userAction": "Navigate back to /thinkspace hub landing",
+      "uiLocation": "ThinkspaceHubPage",
+      "api": null,
+      "functionality": "Closes the Projects workflow and returns to the hub dial — mirrors product navigation."
     }
   ]
 }

@@ -37,9 +37,12 @@ if (!process.env.E2E_ERP_USERNAME) fail('Set E2E_ERP_USERNAME in .env');
 process.env.E2E_VIDEO = 'on';
 process.env.E2E_TRACE = 'on';
 process.env.E2E_SCREENSHOT = 'on';
-process.env.E2E_HEADLESS = 'false';
-if (!process.env.E2E_SLOW_MO || process.env.E2E_SLOW_MO === '0') {
-  process.env.E2E_SLOW_MO = '400';
+const inlineLauncher = process.env.E2E_LAUNCHER_INLINE === '1';
+if (!inlineLauncher) {
+  process.env.E2E_HEADLESS = 'false';
+  if (!process.env.E2E_SLOW_MO || process.env.E2E_SLOW_MO === '0') {
+    process.env.E2E_SLOW_MO = '400';
+  }
 }
 if (!process.env.E2E_DEMO_PAUSE_MS) {
   process.env.E2E_DEMO_PAUSE_MS = '1200';

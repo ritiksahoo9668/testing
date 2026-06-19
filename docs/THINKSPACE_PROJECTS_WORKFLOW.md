@@ -4,16 +4,18 @@ Playwright UI automation for **Thinkspace → Projects** at `/thinkspace/project
 
 ## Demo video (full workflow)
 
-Records a **24-step** headed walkthrough covering every Projects section (A–G):
+Records a **26-step** headed walkthrough covering every Projects section (A–G):
 
 ```bash
 npm run demo:thinkspace-projects
+# or open the Thinkspace launcher and click Projects:
+npm run launcher
 ```
 
 Step definitions: `src/data/thinkspace/project-flow-demo.json`  
 Spec: `tests/thinkspace/demo/project-module-flow.ui.spec.ts`
 
-Includes: access, refresh, bulk import UI, create draft, statutory (all 4 apps), action items (add + edit + validation), detail tabs (overview, milestones CRUD, gantt, comments, actions), edit draft, submit (Compliance / Finance / Under Review), Tasks link, cancel create, delete cleanup.
+Includes: hub → dock launcher → Projects, access, refresh, bulk import UI, create draft, statutory (all 4 apps), action items (add + edit + validation), detail tabs (overview, milestones CRUD, gantt, comments, actions), edit draft, submit (Compliance / Finance / Under Review), Tasks link, cancel create, delete cleanup, return to hub.
 
 ## Coverage
 

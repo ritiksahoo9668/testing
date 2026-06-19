@@ -38,6 +38,7 @@
     "demo:thinkspace-projects": "node scripts/demo-thinkspace-projects.mjs",
     "demo:thinkspace-thought": "node scripts/demo-thinkspace-thought.mjs",
     "demo:thinkspace-travel": "node scripts/demo-thinkspace-travel.mjs",
+    "launcher": "node scripts/launcher-server.mjs",
     "report": "playwright show-report",
     "report:allure": "python scripts/allure_report.py",
     "report:allure:open": "python scripts/allure_report.py --open",

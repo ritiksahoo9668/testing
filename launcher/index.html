@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Maithan ERP — Thinkspace Test Launcher</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Hub: Thinkspace module dial -->
+    <div id="hub-view" class="view view--active">
+      <header class="top-bar">
+        <span class="badge">E2E Testing</span>
+        <span class="top-bar__hint">Click a module — demo flow opens on this page</span>
+      </header>
+
+      <main class="hub">
+        <section class="hub__center">
+          <p class="hub__eyebrow">
+            <svg class="hub__spark" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2l1.2 4.2L17.5 8l-4.3 1.8L12 14l-1.2-4.2L6.5 8l4.3-1.8L12 2zm7 9l.9 3.1L23 15l-3.1 1.3L19 20l-.9-3.7L15 15l3.1-1.3L19 11zM5 11l.9 3.1L9 15l-3.1 1.3L5 20l-.9-3.7L1 15l3.1-1.3L5 11z"/></svg>
+            Thinkspace workspace
+          </p>
+          <h1 class="hub__title">Thinkspace</h1>
+          <p class="hub__subtitle">Click <strong>Projects</strong> or any runnable module — Playwright runs the real workflow (Create modal, forms, submit) and streams the live UI into the panel on the right.</p>
+        </section>
+
+        <aside class="dial" aria-label="Thinkspace modules">
+          <svg class="dial__arc" viewBox="0 0 420 520" aria-hidden="true">
+            <path d="M 354 92 A 260 260 0 0 0 354 428" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+            <path d="M 354 92 A 260 260 0 0 0 354 428" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="10" stroke-linecap="round"/>
+          </svg>
+          <div class="dial__items" id="module-dial"></div>
+        </aside>
+      </main>
+    </div>
+
+    <!-- In-page demo flow (iframe + steps) -->
+    <div id="flow-view" class="view view--hidden" aria-hidden="true">
+      <header class="top-bar top-bar--flow">
+        <button type="button" class="top-bar__back" id="flow-back" title="Back to Thinkspace hub">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          Hub
+        </button>
+        <div class="top-bar__flow-meta">
+          <span class="badge" id="flow-badge">Demo flow</span>
+          <h2 class="top-bar__flow-title" id="flow-title">Actions</h2>
+        </div>
+        <div class="top-bar__flow-status" id="flow-status-pill">Ready</div>
+      </header>
+
+      <div class="flow-layout">
+        <aside class="flow-rail" aria-label="Demo flow steps">
+          <div class="flow-rail__head">
+            <p class="flow-rail__label" id="flow-scope">Loading steps…</p>
+            <div class="flow-rail__progress">
+              <div class="flow-rail__progress-bar" id="flow-progress-bar"></div>
+            </div>
+            <p class="flow-rail__counter" id="flow-counter">0 / 0</p>
+          </div>
+          <ol class="flow-steps" id="flow-steps"></ol>
+          <div class="flow-rail__actions">
+            <button type="button" class="flow-rail__run" id="flow-run">Run flow</button>
+            <button type="button" class="flow-rail__stop flow-rail__stop--hidden" id="flow-stop">Stop</button>
+          </div>
+        </aside>
+
+        <section class="flow-stage" aria-label="Live ERP module UI">
+          <div class="flow-stage__chrome">
+            <span class="flow-stage__url" id="flow-url">/thinkspace/task</span>
+            <span class="flow-stage__live">Live UI</span>
+          </div>
+          <iframe
+            id="flow-iframe"
+            class="flow-stage__iframe flow-stage__iframe--hidden"
+            title="ERP module preview"
+            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-modals"
+          ></iframe>
+          <img
+            id="flow-live"
+            class="flow-stage__live"
+            alt="Live Playwright automation"
+          />
+          <p class="flow-stage__hint" id="flow-iframe-hint">
+            Live view from Playwright — modals, forms, and each workflow step appear here as automation runs.
+          </p>
+        </section>
+      </div>
+    </div>
+
+    <nav class="dock" aria-label="Main modules">
+      <button type="button" class="dock__item dock__item--active" id="dock-thinkspace" title="Thinkspace hub">
+        <span class="dock__icon">TS</span>
+      </button>
+      <span class="dock__label">Thinkspace</span>
+    </nav>
+  </div>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>
