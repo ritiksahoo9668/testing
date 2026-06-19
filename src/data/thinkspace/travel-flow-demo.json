@@ -1,0 +1,218 @@
+{
+  "title": "Thinkspace Travel — complete demo walkthrough",
+  "moduleLabel": "Thinkspace module",
+  "subModuleLabel": "Travel",
+  "route": "/thinkspace/travel",
+  "scope": "Full Travel Desk workflow: access, list, create form toggle, validation, draft with legs/notes, submit, staff approve (expense seed), reject, cancel lifecycle, invalid cancel error, hub navigation, cleanup (sections A–G).",
+  "prerequisites": [
+    "Tenant URL in E2E_ERP_UI_BASE_URL (nip.io host)",
+    "E2E_ERP_USERNAME / E2E_ERP_PASSWORD",
+    "User has thinkspace-travel license",
+    "E2E user should be staff for Approve/Reject steps (P-TR08, P-TR09, P-TR16)",
+    "Django :8001 + UI :8002 running",
+    "Optional: E2E_DEMO_PAUSE_MS (default 1200) for headed video pacing"
+  ],
+  "crudSummary": {
+    "Create": "New request form → Save draft → POST travel/requests/",
+    "Read": "List on load (GET travel/requests/), row metadata, legs, status badges",
+    "Update": "Submit, Approve, Reject, Cancel → POST travel/requests/:id/ { action }",
+    "Delete": "No delete UI — demo cleanup cancels non-terminal rows via API"
+  },
+  "steps": [
+    {
+      "order": 1,
+      "section": "A",
+      "matrixCases": ["P-TR01"],
+      "crud": "Read",
+      "title": "Open Travel Desk",
+      "userAction": "Navigate to /thinkspace/travel",
+      "uiLocation": "TravelHubPage — Travel Desk heading, New request, list section",
+      "api": "GET travel/requests/",
+      "functionality": "Loads the Travel hub. On mount the page fetches all travel requests for the user (staff sees all; others see own). Shows Thinkspace label, title, subtitle, and action buttons."
+    },
+    {
+      "order": 2,
+      "section": "F",
+      "matrixCases": ["P-TR13"],
+      "crud": "Read",
+      "title": "List or empty state",
+      "userAction": "Observe request cards or 'No travel requests yet.' placeholder",
+      "uiLocation": "TravelHubPage — article rows or empty message",
+      "api": null,
+      "functionality": "Each row is an article with title, destination · dates · status, optional leg summary (From → To), and contextual action buttons. Empty tenant shows muted placeholder text."
+    },
+    {
+      "order": 3,
+      "section": "B",
+      "matrixCases": ["P-TR05"],
+      "crud": "Read",
+      "title": "Open create form",
+      "userAction": "Click New request",
+      "uiLocation": "TravelHubPage — inline create form",
+      "api": null,
+      "functionality": "Toggles inline grid form with Title, Destination, Start/End date, From/To leg, Notes, and Save draft. Button label switches to Close while form is open."
+    },
+    {
+      "order": 4,
+      "section": "G",
+      "matrixCases": ["N-TR03"],
+      "crud": "Create",
+      "title": "Required-field guard",
+      "userAction": "Click Save draft with empty required fields",
+      "uiLocation": "Create form — Save draft",
+      "api": null,
+      "functionality": "Client-side guard: missing title, destination, or dates prevents submit handler from calling API. Form stays open; no new row appears."
+    },
+    {
+      "order": 5,
+      "section": "B",
+      "matrixCases": ["P-TR03", "P-TR04"],
+      "crud": "Create",
+      "title": "Save draft with trip leg and notes",
+      "userAction": "Fill all fields → Save draft",
+      "uiLocation": "Create form — Title, Destination, dates, From/To leg, Notes",
+      "api": "POST travel/requests/",
+      "functionality": "Creates TravelRequest in Draft status. Optional legs array sent when From or To filled (mode Flight, travel_date = start_date). Form closes and list refreshes; new row shows leg line."
+    },
+    {
+      "order": 6,
+      "section": "F",
+      "matrixCases": ["P-TR14"],
+      "crud": "Read",
+      "title": "Verify list row metadata",
+      "userAction": "Confirm destination, date range, Draft status, and leg on the new row",
+      "uiLocation": "Request article — subtitle and leg line",
+      "api": null,
+      "functionality": "Read-only display of persisted trip: destination · start → end · status, plus joined leg strings."
+    },
+    {
+      "order": 7,
+      "section": "C",
+      "matrixCases": ["P-TR06", "P-TR07"],
+      "crud": "Update",
+      "title": "Submit draft for approval",
+      "userAction": "Click Submit on Draft row",
+      "uiLocation": "Row action — Submit",
+      "api": "POST travel/requests/:id/ { action: submit }",
+      "functionality": "Transitions Draft → Submitted. Submit button hidden afterward. Requester can still Cancel while not terminal."
+    },
+    {
+      "order": 8,
+      "section": "D",
+      "matrixCases": ["P-TR08", "P-TR16"],
+      "crud": "Update",
+      "title": "Staff approve submitted request",
+      "userAction": "Click Approve (staff only)",
+      "uiLocation": "Row actions — Approve, Reject",
+      "api": "POST travel/requests/:id/ { action: approve }",
+      "functionality": "Staff-only buttons when status is Submitted. Approve → Approved; backend seeds draft Expense claim linked to trip and notifies requester. Approve/Reject buttons removed."
+    },
+    {
+      "order": 9,
+      "section": "B",
+      "matrixCases": ["P-TR03"],
+      "crud": "Create",
+      "title": "Create second request (for reject path)",
+      "userAction": "New request → fill required fields → Save draft",
+      "uiLocation": "Create form",
+      "api": "POST travel/requests/",
+      "functionality": "Second independent travel request in Draft to demonstrate reject workflow without affecting the approved record."
+    },
+    {
+      "order": 10,
+      "section": "C",
+      "matrixCases": ["P-TR06"],
+      "crud": "Update",
+      "title": "Submit second request",
+      "userAction": "Submit on second row",
+      "uiLocation": "Row action — Submit",
+      "api": "POST travel/requests/:id/ { action: submit }",
+      "functionality": "Same submit transition on a separate record for the reject demonstration."
+    },
+    {
+      "order": 11,
+      "section": "D",
+      "matrixCases": ["P-TR09"],
+      "crud": "Update",
+      "title": "Staff reject submitted request",
+      "userAction": "Click Reject on second row",
+      "uiLocation": "Row action — Reject",
+      "api": "POST travel/requests/:id/ { action: reject }",
+      "functionality": "Staff rejects Submitted request → Rejected (terminal for approve/reject). Requester notified via backend."
+    },
+    {
+      "order": 12,
+      "section": "G",
+      "matrixCases": ["N-TR08"],
+      "crud": "Update",
+      "title": "Invalid cancel on Rejected request",
+      "userAction": "Click Cancel on Rejected row → observe error alert",
+      "uiLocation": "Row Cancel + danger Alert",
+      "api": "POST travel/requests/:id/ { action: cancel } (fails)",
+      "functionality": "UI still shows Cancel on Rejected, but API workflow blocks Rejected → Cancelled. Error alert displays server message; status stays Rejected."
+    },
+    {
+      "order": 13,
+      "section": "B",
+      "matrixCases": ["N-TR04"],
+      "crud": "Create",
+      "title": "Abandon create form",
+      "userAction": "New request → type title → Close without saving",
+      "uiLocation": "New request / Close toggle",
+      "api": null,
+      "functionality": "Closing form discards in-progress input; no API call, no new list row."
+    },
+    {
+      "order": 14,
+      "section": "B",
+      "matrixCases": ["P-TR03"],
+      "crud": "Create",
+      "title": "Create third request to cancel",
+      "userAction": "New request → Save draft (minimal fields)",
+      "uiLocation": "Create form",
+      "api": "POST travel/requests/",
+      "functionality": "Third record kept in Draft for cancel-from-draft demonstration."
+    },
+    {
+      "order": 15,
+      "section": "E",
+      "matrixCases": ["P-TR10", "P-TR12"],
+      "crud": "Update",
+      "title": "Cancel draft request",
+      "userAction": "Click Cancel on Draft row",
+      "uiLocation": "Row action — Cancel",
+      "api": "POST travel/requests/:id/ { action: cancel }",
+      "functionality": "Draft → Cancelled. Cancel button hidden on terminal Cancelled status."
+    },
+    {
+      "order": 16,
+      "section": "A",
+      "matrixCases": ["P-TR02"],
+      "crud": "Read",
+      "title": "Navigate back to Thinkspace hub",
+      "userAction": "Click Back link",
+      "uiLocation": "TravelHubPage — Back",
+      "api": null,
+      "functionality": "Returns to /thinkspace module dial / hub landing."
+    },
+    {
+      "order": 17,
+      "section": "A",
+      "matrixCases": ["P-TR01"],
+      "crud": "Read",
+      "title": "Return to Travel Desk",
+      "userAction": "Navigate to /thinkspace/travel again — final list state",
+      "uiLocation": "TravelHubPage — full list with Approved, Rejected, Cancelled rows",
+      "api": "GET travel/requests/",
+      "functionality": "Re-enter module; list shows all demo records with final statuses for video closing shot."
+    }
+  ],
+  "excludedFromTravelDemo": {
+    "Booked / Completed status": "No UI or API action exposed yet",
+    "Travel bookings UI": "API POST travel/bookings/ only",
+    "Travel expenses on trip UI": "API POST travel/expenses/ only",
+    "Guest / unauthenticated access": "Covered in N-TR01 spec, not in headed demo",
+    "Non-staff Approve/Reject": "Requires second user — N-TR06 manual only",
+    "Delete travel request": "No delete endpoint"
+  }
+}

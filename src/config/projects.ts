@@ -37,7 +37,7 @@ export const browserProjects: Project[] = [
     name: 'chromium-guest',
     grep: /@unauthenticated/,
     grepInvert: /@authenticated|@login/,
-    testMatch: /thinkspace\/(workflow|projects|thought)\/.*\.ui\.spec\.ts/,
+    testMatch: /thinkspace\/(workflow|projects|thought|travel)\/.*\.ui\.spec\.ts/,
     use: {
       ...sharedUse,
       ...devices['Desktop Chrome'],
@@ -56,7 +56,7 @@ export const browserProjects: Project[] = [
     dependencies: ['setup-erp-auth'],
     grep: /@thinkspace/,
     grepInvert: /@unauthenticated|@demo/,
-    testMatch: /thinkspace\/(workflow|projects|thought)\/.*\.ui\.spec\.ts/,
+    testMatch: /thinkspace\/(workflow|projects|thought|travel)\/.*\.ui\.spec\.ts/,
     use: {
       ...sharedUse,
       ...devices['Desktop Chrome'],
