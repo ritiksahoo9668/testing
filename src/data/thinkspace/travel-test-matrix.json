@@ -104,9 +104,9 @@
       "workflowStep": "Toggle New request / Close",
       "uiLocation": "TravelHubPage — New request button",
       "title": "Toggle create form open and closed",
-      "what": "New request button shows and hides the inline create form.",
-      "steps": "1. Click New request — form visible.\n2. Click Close — form hidden.",
-      "validationPoints": ["Form visible after New request", "Form hidden after Close"],
+      "what": "New request opens the form; Cancel closes it without saving.",
+      "steps": "1. Click New request — form visible.\n2. Click Cancel — form hidden.",
+      "validationPoints": ["Form visible after New request", "Form hidden after Cancel"],
       "expected": "Create form toggles correctly.",
       "automated": true
     },

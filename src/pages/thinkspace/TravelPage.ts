@@ -6,13 +6,14 @@ import type { TravelCreateFormData } from '../../data/thinkspace/travel-factory.
 
 export class TravelPage extends BasePage {
   readonly pageTitle = this.page.getByRole('heading', { name: 'Travel Desk' });
-  readonly newRequestButton = this.page.getByRole('button', { name: 'New request' });
-  readonly closeFormButton = this.page.getByRole('button', { name: 'Close' });
+  readonly newRequestButton = this.page.getByRole('button', { name: 'New request' }).first();
+  readonly cancelFormButton = this.page.getByRole('button', { name: 'Cancel' });
   readonly saveDraftButton = this.page.getByRole('button', { name: 'Save draft' });
+  readonly submitForApprovalButton = this.page.getByRole('button', { name: 'Submit for Approval' });
   readonly backLink = this.page.getByRole('link', { name: 'Back' });
-  readonly emptyState = this.page.getByText('No travel requests yet.');
+  readonly emptyState = this.page.getByText('No travel requests yet', { exact: true });
 
-  readonly createForm = this.page.locator('form').filter({ has: this.saveDraftButton });
+  readonly createForm = this.page.locator('form.travel-form-card__body');
 
   async open(path = '/thinkspace/travel'): Promise<void> {
     await this.goto(path);
@@ -33,7 +34,7 @@ export class TravelPage extends BasePage {
   }
 
   async closeCreateForm(): Promise<void> {
-    await this.closeFormButton.click();
+    await this.cancelFormButton.click();
     await expect(this.createForm).toBeHidden();
   }
 
@@ -49,32 +50,24 @@ export class TravelPage extends BasePage {
     return this.page.getByRole('article').filter({ hasText: title });
   }
 
-  fieldByLabel(labelPrefix: string): Locator {
-    return this.createForm
-      .locator('.group')
-      .filter({ hasText: new RegExp(`^${labelPrefix}`, 'i') })
-      .locator('input:not([type="date"]), textarea')
-      .first();
+  fieldByLabel(label: string): Locator {
+    return this.createForm.getByLabel(label, { exact: true }).first();
   }
 
   async fillCreateForm(data: TravelCreateFormData): Promise<void> {
     await this.fieldByLabel('Title').fill(data.title);
     await this.fieldByLabel('Destination').fill(data.destination);
-    await this.fillDateField('Start date', data.startDate);
-    await this.fillDateField('End date', data.endDate);
+    await this.fieldByLabel('Start date').fill(data.startDate);
+    await this.fieldByLabel('End date').fill(data.endDate);
     if (data.fromLoc !== undefined) {
-      await this.fieldByLabel('From \\(leg\\)').fill(data.fromLoc);
+      await this.fieldByLabel('From').fill(data.fromLoc);
     }
     if (data.toLoc !== undefined) {
-      await this.fieldByLabel('To \\(leg\\)').fill(data.toLoc);
+      await this.fieldByLabel('To').fill(data.toLoc);
     }
     if (data.notes !== undefined) {
       await this.fieldByLabel('Notes').fill(data.notes);
     }
-  }
-
-  private async fillDateField(label: string, value: string): Promise<void> {
-    await this.createForm.locator('label').filter({ hasText: label }).locator('input[type="date"]').fill(value);
   }
 
   async saveDraft(): Promise<void> {
