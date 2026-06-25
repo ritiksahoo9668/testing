@@ -15,12 +15,14 @@ test.describe('A. Thought access & navigation @thinkspace @authenticated', () =>
     await expect(thoughtListPage.page).toHaveURL(/\/thinkspace\/thought/);
   });
 
-  test(`${thoughtTestTitle('P-TH02')} @positive`, async ({ thoughtListPage, thoughtAnalyticsPage }, testInfo) => {
+  test.skip(`${thoughtTestTitle('P-TH02')} @positive`, async ({ thoughtListPage }, testInfo) => {
     annotateThoughtTestCase(testInfo, 'P-TH02');
+    testInfo.annotations.push({
+      type: 'Skip reason',
+      description: 'Meeting intelligence (/thinkspace/thought/analytics) removed from current UI router.',
+    });
     await thoughtListPage.open('/thinkspace/thought');
-    await thoughtListPage.intelligenceLink.click();
-    await thoughtAnalyticsPage.expectLoaded();
-    await expect(thoughtAnalyticsPage.page).toHaveURL(/\/thinkspace\/thought\/analytics/);
+    await thoughtListPage.expectLoaded();
   });
 });
 

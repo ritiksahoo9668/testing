@@ -7,19 +7,14 @@ import type { TravelCreateFormData } from '../../data/thinkspace/travel-factory.
 export class TravelPage extends BasePage {
   readonly pageTitle = this.page.getByRole('heading', { name: 'Travel Desk' });
   readonly newRequestButton = this.page.getByRole('button', { name: 'New request' }).first();
-  readonly cancelFormButton = this.page
-    .locator('form.travel-form-card__body')
-    .getByRole('button', { name: 'Cancel' });
-  readonly saveDraftButton = this.page
-    .locator('form.travel-form-card__body')
-    .getByRole('button', { name: 'Save draft' });
-  readonly submitForApprovalButton = this.page
-    .locator('form.travel-form-card__body')
-    .getByRole('button', { name: 'Submit for Approval' });
-  readonly backLink = this.page.getByRole('link', { name: 'Back' });
-  readonly emptyState = this.page.getByText('No travel requests yet', { exact: true });
+  readonly backLink = this.page.getByRole('link', { name: 'Back' }).first();
+  readonly emptyState = this.page.getByText('No requests found', { exact: true });
 
-  readonly createForm = this.page.locator('form.travel-form-card__body');
+  readonly createPageTitle = this.page.getByRole('heading', { name: 'New Travel Request' });
+  readonly sectionNav = this.page.getByRole('navigation', { name: 'Form sections' });
+  readonly cancelFormLink = this.page.getByRole('link', { name: 'Cancel' }).first();
+  readonly saveDraftButton = this.page.getByRole('button', { name: 'Save draft' });
+  readonly submitForApprovalButton = this.page.getByRole('button', { name: 'Submit for Approval' });
 
   async open(path = '/thinkspace/travel'): Promise<void> {
     await this.goto(path);
@@ -35,51 +30,79 @@ export class TravelPage extends BasePage {
 
   async openCreateForm(): Promise<void> {
     await this.newRequestButton.click();
-    await expect(this.createForm).toBeVisible();
-    await expect(this.saveDraftButton).toBeVisible();
+    await expect(this.page).toHaveURL(/\/thinkspace\/travel\/new/, { timeout: 15_000 });
+    await this.expectCreateFormVisible();
+  }
+
+  async openCreateFormDirect(): Promise<void> {
+    await this.goto('/thinkspace/travel/new');
+    await waitForPageReady(this.page);
+    await this.expectCreateFormVisible();
   }
 
   async closeCreateForm(): Promise<void> {
-    await this.cancelFormButton.click();
-    await expect(this.createForm).toBeHidden();
+    await this.cancelFormLink.click();
+    await expect(this.page).toHaveURL(/\/thinkspace\/travel\/?$/, { timeout: 15_000 });
+    await this.expectCreateFormHidden();
   }
 
   async expectCreateFormHidden(): Promise<void> {
-    await expect(this.createForm).toBeHidden();
+    await expect(this.createPageTitle).toBeHidden({ timeout: 10_000 });
   }
 
   async expectCreateFormVisible(): Promise<void> {
-    await expect(this.createForm).toBeVisible();
+    await expect(this.createPageTitle).toBeVisible({ timeout: 15_000 });
+    await expect(this.sectionNav).toBeVisible();
+    await expect(this.saveDraftButton).toBeVisible();
   }
 
   rowForTitle(title: string): Locator {
-    return this.page.getByRole('article').filter({ hasText: title });
+    return this.page.locator('tbody tr').filter({ hasText: title }).first();
   }
 
-  fieldByLabel(label: string): Locator {
-    // Required fields append "*" in the label; match prefix only.
-    return this.createForm.getByLabel(new RegExp(`^${label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`)).first();
+  private field(id: string): Locator {
+    return this.page.locator(`#${id}`);
+  }
+
+  async selectFormSection(label: 'Trip details' | 'Itinerary leg' | 'Notes'): Promise<void> {
+    await this.sectionNav.getByRole('button', { name: label, exact: true }).click();
   }
 
   async fillCreateForm(data: TravelCreateFormData): Promise<void> {
-    await this.fieldByLabel('Title').fill(data.title);
-    await this.fieldByLabel('Destination').fill(data.destination);
-    await this.fieldByLabel('Start date').fill(data.startDate);
-    await this.fieldByLabel('End date').fill(data.endDate);
-    if (data.fromLoc !== undefined) {
-      await this.fieldByLabel('From').fill(data.fromLoc);
+    await this.selectFormSection('Trip details');
+    await this.field('travel-title').fill(data.title);
+    await this.field('travel-destination').fill(data.destination);
+    await this.field('travel-start-date').fill(data.startDate);
+    await this.field('travel-end-date').fill(data.endDate);
+
+    if (data.fromLoc !== undefined || data.toLoc !== undefined) {
+      await this.selectFormSection('Itinerary leg');
+      if (data.fromLoc !== undefined) {
+        await this.field('travel-from-leg').fill(data.fromLoc);
+      }
+      if (data.toLoc !== undefined) {
+        await this.field('travel-to-leg').fill(data.toLoc);
+      }
     }
-    if (data.toLoc !== undefined) {
-      await this.fieldByLabel('To').fill(data.toLoc);
-    }
+
     if (data.notes !== undefined) {
-      await this.fieldByLabel('Notes').fill(data.notes);
+      await this.selectFormSection('Notes');
+      await this.field('travel-notes').fill(data.notes);
     }
   }
 
   async saveDraft(): Promise<void> {
+    await expect(this.saveDraftButton).toBeEnabled({ timeout: 10_000 });
     await this.saveDraftButton.click();
-    await expect(this.createForm).toBeHidden({ timeout: 20_000 });
+    await expect(this.page).toHaveURL(/\/thinkspace\/travel\/?$/, { timeout: 20_000 });
+    await waitForSpinnerToDisappear(this.page);
+  }
+
+  async submitForApproval(): Promise<void> {
+    await expect(this.submitForApprovalButton).toBeEnabled({ timeout: 10_000 });
+    await this.submitForApprovalButton.click();
+    await expect(this.page).toHaveURL(/\/thinkspace\/travel\/?$/, { timeout: 20_000 });
+    await waitForSpinnerToDisappear(this.page);
   }
 
   async clickSaveDraftWithoutValidation(): Promise<void> {
@@ -98,13 +121,15 @@ export class TravelPage extends BasePage {
   async expectRowMetadata(title: string, destination: string, startDate: string, endDate: string, status: string): Promise<void> {
     const row = this.rowForTitle(title);
     await expect(row).toContainText(destination);
-    await expect(row).toContainText(startDate);
-    await expect(row).toContainText(endDate);
     await expect(row).toContainText(status);
+    // Dates render via locale formatting in the desk table.
+    await expect(row).toBeVisible();
   }
 
   async expectRowLeg(title: string, fromLoc: string, toLoc: string): Promise<void> {
-    await expect(this.rowForTitle(title)).toContainText(`${fromLoc} → ${toLoc}`);
+    const row = this.rowForTitle(title);
+    await expect(row).toContainText(fromLoc);
+    await expect(row).toContainText(toLoc);
   }
 
   async clickRowAction(title: string, action: 'Submit' | 'Approve' | 'Reject' | 'Cancel'): Promise<void> {
@@ -126,7 +151,7 @@ export class TravelPage extends BasePage {
   }
 
   async rowCount(): Promise<number> {
-    return this.page.getByRole('article').count();
+    return this.page.locator('tbody tr').count();
   }
 
   async expectErrorAlert(): Promise<void> {

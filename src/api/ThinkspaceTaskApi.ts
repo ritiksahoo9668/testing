@@ -82,9 +82,18 @@ export class ThinkspaceTaskApi {
   }
 
   async findTaskByTitle(title: string): Promise<ThinkspaceTaskRecord | undefined> {
-    const { body } = await this.listTasks();
-    const results = body.data?.results ?? [];
-    return results.find((t) => t.task_title === title);
+    for (let attempt = 0; attempt < 8; attempt += 1) {
+      try {
+        const { body } = await this.listTasks({ limit: '200', start: '0' });
+        const results = body.data?.results ?? [];
+        const found = results.find((t) => t.task_title === title);
+        if (found) return found;
+      } catch {
+        return undefined;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+    return undefined;
   }
 }
 

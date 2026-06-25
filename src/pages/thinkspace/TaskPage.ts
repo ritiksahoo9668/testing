@@ -72,23 +72,37 @@ export class TaskPage extends BasePage {
   bucketRow(title: string) {
     return this.bucketlistPanel
       .locator('div.rounded-lg.border')
-      .filter({ has: this.page.getByText(title, { exact: true }) })
+      .filter({ has: this.page.locator('div.truncate', { hasText: title }) })
       .first();
   }
 
   async addBucketItem(title: string): Promise<void> {
     await this.ensureBucketlistOpen();
-    const responsePromise = this.page
-      .waitForResponse(
+    await waitForSpinnerToDisappear(this.page);
+    await expect(this.bucketInput).toBeEnabled({ timeout: 30_000 });
+
+    const postBucket = () =>
+      this.page.waitForResponse(
         (res) => res.url().includes('/thinkspace/bucket-list/') && res.request().method() === 'POST',
-        { timeout: 20_000 },
-      )
-      .catch(() => null);
+        { timeout: 30_000 },
+      );
+
+    await this.bucketInput.click();
+    await this.bucketInput.fill('');
     await this.bucketInput.fill(title);
+
+    const responsePromise = postBucket();
     await this.bucketInput.press('Enter');
-    await responsePromise;
+    const response = await responsePromise.catch(() => null);
+
+    if (!response?.ok() && (await this.bucketInput.inputValue()) === title) {
+      const retryPromise = postBucket();
+      await this.bucketInput.press('Enter');
+      await retryPromise.catch(() => null);
+    }
+
     await expect
-      .poll(async () => this.bucketlistPanel.getByText(title, { exact: true }).count(), { timeout: 30_000 })
+      .poll(async () => this.bucketlistPanel.locator('div.truncate', { hasText: title }).count(), { timeout: 25_000 })
       .toBeGreaterThan(0);
   }
 
@@ -157,11 +171,17 @@ export class TaskPage extends BasePage {
     await this.workMode.clickAgendaAction();
   }
 
-  /** AgendasPage compact header — opens Create New Agenda modal (matches live DOM). */
-  readonly agendasColumnHeader = this.page.locator('span[title="Click to create a new Agenda"]');
+  /** Agendas column header — opens Create New Agenda modal (matches live DOM). */
+  readonly agendasColumnHeader = this.page.locator('[title="Click to create a new Agenda"]').first();
 
   async readAgendasColumnCount(): Promise<number> {
-    const text = ((await this.agendasColumnHeader.textContent()) ?? '').trim();
+    const header = this.agendasColumnHeader;
+    const badge = header.locator('span').filter({ hasText: /^\d+$/ }).last();
+    if (await badge.isVisible().catch(() => false)) {
+      const n = Number((await badge.textContent())?.trim());
+      if (!Number.isNaN(n)) return n;
+    }
+    const text = ((await header.textContent()) ?? '').trim();
     const match = text.match(/\((\d+)\)/);
     return match ? Number(match[1]) : 0;
   }

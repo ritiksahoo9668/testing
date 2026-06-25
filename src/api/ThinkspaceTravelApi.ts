@@ -112,8 +112,13 @@ export class ThinkspaceTravelApi {
   }
 
   async findTravelByTitle(title: string): Promise<TravelRequestRecord | undefined> {
-    const { body } = await this.listTravelRequests({ limit: 200 });
-    return extractTravelList(body).find((r) => r.title === title);
+    for (let attempt = 0; attempt < 12; attempt += 1) {
+      const { body } = await this.listTravelRequests({ limit: 200 });
+      const found = extractTravelList(body).find((r) => r.title === title);
+      if (found) return found;
+      await new Promise((resolve) => setTimeout(resolve, 750));
+    }
+    return undefined;
   }
 
   async findExpenseClaimForTravel(travelId: number): Promise<ExpenseClaimRecord | undefined> {

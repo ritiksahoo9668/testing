@@ -461,6 +461,9 @@ export class ProjectsPage extends BasePage {
           await expect(this.milestoneRow(title)).toHaveCount(0, { timeout: 15_000 });
           return;
         }
+        if (response?.status() === 404 && (await this.milestoneRow(title).count()) === 0) {
+          return;
+        }
         if (attempt === 0 && response?.status() === 502) {
           await this.page.waitForTimeout(1_000);
           continue;

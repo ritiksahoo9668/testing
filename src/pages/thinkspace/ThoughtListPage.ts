@@ -8,7 +8,6 @@ export type ContributorAccessRole = 'Viewer' | 'Editor';
 export class ThoughtListPage extends BasePage {
   readonly searchInput = this.page.locator('#meeting-search');
   readonly createButton = this.page.getByRole('button', { name: 'Create meeting' });
-  readonly intelligenceLink = this.page.getByRole('link', { name: 'Intelligence' });
   readonly hubLink = this.page.getByRole('link', { name: 'Thinkspace hub' });
   readonly pageTitle = this.page.getByRole('heading', { name: 'Meeting Notes' });
   readonly createModal = this.page.locator('.thought-create-modal');
@@ -49,6 +48,22 @@ export class ThoughtListPage extends BasePage {
 
   async fillTitle(title: string): Promise<void> {
     await this.titleInput.fill(title);
+  }
+
+  /** Title + date/time — both required before Create meeting is enabled. */
+  async fillRequiredMeetingFields(title: string, meetingDate?: string): Promise<void> {
+    const { datetimeLocalOffset } = await import('../../data/thinkspace/thought-factory.js');
+    await this.fillTitle(title);
+    await this.fillDateLocal(meetingDate ?? datetimeLocalOffset(48));
+  }
+
+  async ensureCreateFormSubmittable(): Promise<void> {
+    const dateValue = await this.dateInput.inputValue();
+    if (!dateValue.trim()) {
+      const { datetimeLocalOffset } = await import('../../data/thinkspace/thought-factory.js');
+      await this.fillDateLocal(datetimeLocalOffset(48));
+    }
+    await expect(this.submitCreateButton).toBeEnabled({ timeout: 15_000 });
   }
 
   async fillAgenda(agenda: string): Promise<void> {
@@ -122,6 +137,7 @@ export class ThoughtListPage extends BasePage {
   }
 
   async submitCreate(): Promise<void> {
+    await this.ensureCreateFormSubmittable();
     await this.submitCreateButton.scrollIntoViewIfNeeded();
     await this.submitCreateButton.click();
     await expect(this.page).toHaveURL(/\/thinkspace\/thought\/workspace\?meeting=/, { timeout: 120_000 });

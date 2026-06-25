@@ -88,7 +88,7 @@ test.describe('G. Create validation @thinkspace @authenticated', () => {
 
     await travelPage.open();
     await travelPage.openCreateForm();
-    await travelPage.fieldByLabel('Title').fill(title);
+    await travelPage.page.locator('#travel-title').fill(title);
     await travelPage.closeCreateForm();
     await travelPage.expectCreateFormHidden();
 

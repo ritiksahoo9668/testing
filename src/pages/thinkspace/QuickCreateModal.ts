@@ -73,7 +73,7 @@ export class QuickCreateModal extends BasePage {
     await expect(this.startDateTime).toHaveValue(startValue);
   }
 
-  async fillAndSubmit(title: string, options?: { description?: string }): Promise<void> {
+  async fillAndSubmit(title: string, options?: { description?: string }): Promise<{ taskId?: number }> {
     await this.ensureSpecificAction();
     await this.titleInput.fill(title);
     if (options?.description) {
@@ -91,8 +91,27 @@ export class QuickCreateModal extends BasePage {
       }
     }
     await expect(this.createActionButton).toBeEnabled({ timeout: 30_000 });
-    await this.createActionButton.click();
-    await expect(this.modalShell).toBeHidden({ timeout: 30_000 });
+
+    let taskId: number | undefined;
+    const responseHandler = async (res: import('@playwright/test').Response) => {
+      if (!res.url().includes('/thinkspace/tasks/') || res.request().method() !== 'POST' || !res.ok()) return;
+      try {
+        const body = (await res.json()) as { data?: { id?: number } };
+        if (body?.data?.id) taskId = Number(body.data.id);
+      } catch {
+        /* optional */
+      }
+    };
+
+    this.page.on('response', responseHandler);
+    try {
+      await this.createActionButton.click();
+      await expect(this.modalShell).toBeHidden({ timeout: 30_000 });
+    } finally {
+      this.page.off('response', responseHandler);
+    }
+
+    return { taskId };
   }
 
   async selectSelfAssignee(): Promise<void> {

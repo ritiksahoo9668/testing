@@ -35,7 +35,7 @@ test.describe('C. Submit workflow @thinkspace @authenticated', () => {
     const title = await createDraftViaUi(travelPage, thinkspace, thinkspaceTravelApi);
 
     await travelPage.clickRowAction(title, 'Submit');
-    await travelPage.expectRowStatus(title, 'Submitted');
+    await travelPage.expectRowStatus(title, 'Pending');
   });
 
   test(`${travelTestTitle('P-TR07')} @positive`, async (
@@ -46,7 +46,7 @@ test.describe('C. Submit workflow @thinkspace @authenticated', () => {
     const title = await createDraftViaUi(travelPage, thinkspace, thinkspaceTravelApi);
 
     await travelPage.clickRowAction(title, 'Submit');
-    await travelPage.expectRowStatus(title, 'Submitted');
+    await travelPage.expectRowStatus(title, 'Pending');
     await travelPage.expectRowActionHidden(title, 'Submit');
   });
 });

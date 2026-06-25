@@ -34,7 +34,6 @@ test.describe('Thinkspace Thought — complete flow video @demo @thinkspace', ()
     {
       thoughtListPage,
       thoughtWorkspacePage,
-      thoughtAnalyticsPage,
       thinkspace,
       thoughtApi,
       thinkspaceTaskApi,
@@ -63,13 +62,8 @@ test.describe('Thinkspace Thought — complete flow video @demo @thinkspace', ()
       await demoPause(page);
     });
 
-    await test.step('2. [A] Preview Meeting intelligence (P-TH02)', async () => {
-      await thoughtListPage.intelligenceLink.click();
-      await thoughtAnalyticsPage.expectLoaded();
-      await thoughtAnalyticsPage.expectStatsVisible();
-      await demoPause(page);
-      await thoughtAnalyticsPage.backLink.click();
-      await thoughtListPage.expectLoaded();
+    await test.step('2. [A] Hub link visible on Meeting Notes (P-TH02 superseded)', async () => {
+      await expect(thoughtListPage.hubLink).toBeVisible();
       await demoPause(page);
     });
 
@@ -345,15 +339,13 @@ test.describe('Thinkspace Thought — complete flow video @demo @thinkspace', ()
       await thoughtListPage.closeLogsModal();
     });
 
-    await test.step('35. [G] Analytics global search (P-TH25, P-TH26)', async () => {
-      await thoughtListPage.intelligenceLink.click();
-      await thoughtAnalyticsPage.expectStatsVisible();
-      await thoughtAnalyticsPage.runGlobalSearch(meetingTitle);
+    await test.step('35. [G] Analytics removed — list search instead (P-TH25, P-TH26)', async () => {
+      await thoughtListPage.searchMeetings(meetingTitle);
+      await thoughtListPage.expectMeetingInList(meetingTitle);
       await demoPause(page);
     });
 
     await test.step('36. [B] Cancel create preview (P-TH05)', async () => {
-      await thoughtAnalyticsPage.backLink.click();
       await thoughtListPage.openCreateModal();
       await thoughtListPage.fillTitle('Should not persist');
       await thoughtListPage.cancelCreate();

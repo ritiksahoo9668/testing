@@ -18,7 +18,7 @@ async function createSubmittedViaUi(
   expect(row?.id).toBeTruthy();
   registerTravelRequestId(thinkspace, row!.id!);
   await travelPage.clickRowAction(data.title, 'Submit');
-  await travelPage.expectRowStatus(data.title, 'Submitted');
+  await travelPage.expectRowStatus(data.title, 'Pending');
   return { title: data.title, id: row!.id! };
 }
 

@@ -55,7 +55,7 @@ test.describe('Thinkspace Travel — complete flow video @demo @thinkspace', () 
       if (count === 0) {
         await travelPage.expectEmptyState();
       } else {
-        await expect(travelPage.page.getByRole('article').first()).toBeVisible();
+        await expect(travelPage.page.locator('tbody tr').first()).toBeVisible();
       }
       await demoPause(page);
     });
@@ -103,7 +103,7 @@ test.describe('Thinkspace Travel — complete flow video @demo @thinkspace', () 
 
     await test.step('7. [C] Submit draft (P-TR06, P-TR07)', async () => {
       await travelPage.clickRowAction(approveTitle, 'Submit');
-      await travelPage.expectRowStatus(approveTitle, 'Submitted');
+      await travelPage.expectRowStatus(approveTitle, 'Pending');
       await travelPage.expectRowActionHidden(approveTitle, 'Submit');
       await demoPause(page);
     });
@@ -136,7 +136,7 @@ test.describe('Thinkspace Travel — complete flow video @demo @thinkspace', () 
 
     await test.step('10. [C] Submit second request (P-TR06)', async () => {
       await travelPage.clickRowAction(rejectTitle, 'Submit');
-      await travelPage.expectRowStatus(rejectTitle, 'Submitted');
+      await travelPage.expectRowStatus(rejectTitle, 'Pending');
       await demoPause(page);
     });
 
@@ -162,7 +162,7 @@ test.describe('Thinkspace Travel — complete flow video @demo @thinkspace', () 
 
     await test.step('13. [B] Abandon create form (N-TR04)', async () => {
       await travelPage.openCreateForm();
-      await travelPage.fieldByLabel('Title').fill(abandonTitle);
+      await travelPage.page.locator('#travel-title').fill(abandonTitle);
       await demoPause(page, 800);
       await travelPage.closeCreateForm();
       expect(await thinkspaceTravelApi.findTravelByTitle(abandonTitle)).toBeUndefined();
