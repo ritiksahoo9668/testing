@@ -1,6 +1,6 @@
 /** Thinkspace module dial — matches product ThinkspaceModuleDial. */
 const MODULES = [
-  { id: 'action', label: 'Actions', runnable: true, demo: 'action', route: '/thinkspace/task' },
+  { id: 'action', label: 'Action', runnable: true, demo: 'action', route: '/thinkspace/task' },
   { id: 'docflow', label: 'DocFlow', runnable: false, route: '/thinkspace/dms' },
   { id: 'projects', label: 'Projects', runnable: true, demo: 'projects', route: '/thinkspace/projects' },
   { id: 'journaling', label: 'Journaling', runnable: false, route: '/thinkspace/journaling' },

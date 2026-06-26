@@ -1,5 +1,6 @@
 import { projectsTest as test, expect } from '../../../src/fixtures/projects.js';
 import { skipIfNoErpCredentials, skipIfAuthStorageMissing } from '../../../src/fixtures/index.js';
+import { THINKSPACE_LAUNCHER_TILES } from '../../../src/pages/thinkspace/ThinkspaceHubPage.js';
 import { uniqueProjectTitle } from '../../../src/data/thinkspace/project-factory.js';
 import { getProjectFlowDemoSteps } from '../../../src/data/thinkspace/load-project-flow-demo.js';
 import { demoPause } from '../../../src/utils/demo-pause.js';
@@ -69,7 +70,7 @@ test.describe('Thinkspace Projects — complete flow video @demo @thinkspace', (
     });
 
     await demoStep('2. [A] Open Projects from dock launcher (P-PR01)', async () => {
-      await thinkspaceHubPage.openModuleFromLauncher('Projects');
+      await thinkspaceHubPage.openModuleFromLauncher(THINKSPACE_LAUNCHER_TILES.projects);
       await projectsPage.expectLoaded();
       await demoPause(page);
     });

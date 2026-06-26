@@ -68,6 +68,7 @@ const playwrightArgs = [
   'playwright',
   'test',
   'tests/auth/login',
+  'tests/thinkspace/hub',
   'tests/thinkspace/workflow',
   '--project=chromium-login-guest',
   '--grep-invert',
